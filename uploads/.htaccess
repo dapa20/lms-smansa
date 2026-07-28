@@ -1,0 +1,7 @@
+# Mencegah file di folder ini dieksekusi sebagai script PHP (keamanan tambahan).
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+<FilesMatch "\.(php|phtml|php3|php4|php5|php7|pht)$">
+    Require all denied
+</FilesMatch>

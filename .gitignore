@@ -1,0 +1,6 @@
+/uploads/avatar/*
+!/uploads/avatar/.gitkeep
+/uploads/materi/*
+!/uploads/materi/.gitkeep
+.DS_Store
+Thumbs.db

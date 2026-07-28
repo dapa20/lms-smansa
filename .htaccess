@@ -1,0 +1,2 @@
+# Menonaktifkan directory listing (mencegah orang lain melihat daftar file di folder ini).
+Options -Indexes
