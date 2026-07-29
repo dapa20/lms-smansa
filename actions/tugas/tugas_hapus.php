@@ -1,9 +1,9 @@
-<?php
+﻿<?php
 require_once __DIR__ . '/../../includes/auth.php';
 requireLogin();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    redirect('../../tugas_ujian.php');
+    redirect('../../pages/tugas_ujian.php');
 }
 
 $id = (int)($_POST['id'] ?? 0);
@@ -14,7 +14,7 @@ if ($id > 0) {
         $pemilik = $stmt->fetch();
         if (!$pemilik || (int)$pemilik['dibuat_oleh'] !== (int)$_SESSION['user_id']) {
             setFlash('gagal', 'Anda hanya bisa menghapus tugas/ujian yang Anda buat sendiri.');
-            redirect('../../tugas_ujian.php');
+            redirect('../../pages/tugas_ujian.php');
         }
     }
     $stmt = $pdo->prepare('DELETE FROM tugas_ujian WHERE id = ?');
@@ -22,4 +22,4 @@ if ($id > 0) {
     setFlash('sukses', 'Tugas/ujian berhasil dihapus.');
 }
 
-redirect('../tugas_ujian.php');
+redirect('../../pages/tugas_ujian.php');

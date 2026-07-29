@@ -1,9 +1,9 @@
-<?php
+﻿<?php
 require_once __DIR__ . '/../../includes/auth.php';
 requireLogin();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    redirect('../../data_siswa.php');
+    redirect('../../pages/data_siswa.php');
 }
 
 $kelasId   = (int)($_POST['kelas_id'] ?? 0);
@@ -24,12 +24,12 @@ if (!isAdmin()) {
     $stmt->execute([$_SESSION['user_id'], $kelasId]);
     if ((int)$stmt->fetch()['c'] === 0) {
         setFlash('gagal', 'Anda tidak mengajar di kelas tersebut.');
-        redirect('../../data_siswa.php');
+        redirect('../../pages/data_siswa.php');
     }
 }
 
 if ($kelasId === 0 || !is_array($siswaIds)) {
-    redirect('../../data_siswa.php');
+    redirect('../../pages/data_siswa.php');
 }
 
 $stmt = $pdo->prepare("INSERT INTO kehadiran (siswa_id, kelas_id, tanggal, status, dicatat_oleh)
@@ -55,5 +55,5 @@ if ($redirect === 'kelas_jadwal') {
     }
     redirect($back);
 } else {
-    redirect('../../data_siswa.php');
+    redirect('../../pages/data_siswa.php');
 }

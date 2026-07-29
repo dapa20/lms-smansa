@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require_once __DIR__ . '/../../includes/auth.php';
 require_once __DIR__ . '/../../includes/functions.php';
 requireLogin();
@@ -20,7 +20,7 @@ if ($action === 'add_section') {
         $ins->execute([$kelasId, $mapelId, $judul, $maxUrutan, $user['id']]);
         setFlash('success', 'Section baru berhasil ditambahkan.');
     }
-    redirect("../../materi_detail.php?kelas_id=$kelasId&mapel_id=$mapelId");
+    redirect("../../pages/materi_detail.php?kelas_id=$kelasId&mapel_id=$mapelId");
 }
 
 elseif ($action === 'edit_section') {
@@ -34,7 +34,7 @@ elseif ($action === 'edit_section') {
         $upd->execute([$judul, $sectionId]);
         setFlash('success', 'Judul section berhasil diperbarui.');
     }
-    redirect("../../materi_detail.php?kelas_id=$kelasId&mapel_id=$mapelId");
+    redirect("../../pages/materi_detail.php?kelas_id=$kelasId&mapel_id=$mapelId");
 }
 
 elseif ($action === 'delete_section') {
@@ -47,7 +47,7 @@ elseif ($action === 'delete_section') {
         $del->execute([$sectionId]);
         setFlash('success', 'Section berhasil dihapus.');
     }
-    redirect("../../materi_detail.php?kelas_id=$kelasId&mapel_id=$mapelId");
+    redirect("../../pages/materi_detail.php?kelas_id=$kelasId&mapel_id=$mapelId");
 }
 
 elseif ($action === 'add_item') {
@@ -85,7 +85,7 @@ elseif ($action === 'add_item') {
         $ins->execute([$sectionId, $tipe, $judul, $deskripsi, $urlLink, $namaFile, $namaFileAsli, $ukuranFile, $user['id']]);
         setFlash('success', 'Item materi/konten berhasil ditambahkan.');
     }
-    redirect("../../materi_detail.php?kelas_id=$kelasId&mapel_id=$mapelId");
+    redirect("../../pages/materi_detail.php?kelas_id=$kelasId&mapel_id=$mapelId");
 }
 
 elseif ($action === 'delete_item') {
@@ -98,7 +98,7 @@ elseif ($action === 'delete_item') {
         $del->execute([$itemId]);
         setFlash('success', 'Item materi berhasil dihapus.');
     }
-    redirect("../../materi_detail.php?kelas_id=$kelasId&mapel_id=$mapelId");
+    redirect("../../pages/materi_detail.php?kelas_id=$kelasId&mapel_id=$mapelId");
 }
 
 elseif ($action === 'add_reply') {
@@ -112,7 +112,7 @@ elseif ($action === 'add_reply') {
         $ins->execute([$itemId, $user['id'], $pesan]);
         setFlash('success', 'Balasan diskusi berhasil dikirim.');
     }
-    redirect("../../materi_detail.php?kelas_id=$kelasId&mapel_id=$mapelId#item-$itemId");
+    redirect("../../pages/materi_detail.php?kelas_id=$kelasId&mapel_id=$mapelId#item-$itemId");
 }
 
-redirect('../../materi.php');
+redirect('../../pages/materi.php');

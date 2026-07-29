@@ -1,9 +1,9 @@
-<?php
+﻿<?php
 require_once __DIR__ . '/../../includes/auth.php';
 requireRole('admin');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    redirect('../../data_siswa.php?tab=guru');
+    redirect('../../pages/data_siswa.php?tab=guru');
 }
 
 $id            = (int)($_POST['id'] ?? 0);
@@ -17,11 +17,11 @@ $mapelKeahlian = trim($_POST['mapel_keahlian'] ?? '');
 
 if ($namaLengkap === '' || $email === '') {
     setFlash('gagal', 'Nama dan email wajib diisi.');
-    redirect('../../data_siswa.php?tab=guru');
+    redirect('../../pages/data_siswa.php?tab=guru');
 }
 if ($id === 0 && strlen($password) < 6) {
     setFlash('gagal', 'Kata sandi wajib diisi (minimal 6 karakter) untuk akun baru.');
-    redirect('../../data_siswa.php?tab=guru');
+    redirect('../../pages/data_siswa.php?tab=guru');
 }
 
 try {
@@ -29,7 +29,7 @@ try {
         if ($password !== '') {
             if (strlen($password) < 6) {
                 setFlash('gagal', 'Kata sandi baru minimal 6 karakter.');
-                redirect('../../data_siswa.php?tab=guru');
+                redirect('../../pages/data_siswa.php?tab=guru');
             }
             $stmt = $pdo->prepare('UPDATE users SET nama_lengkap=?, email=?, nip=?, role=?, status=?, mapel_keahlian=?, password=? WHERE id=?');
             $stmt->execute([$namaLengkap, $email, $nip ?: null, $role, $status, $mapelKeahlian ?: null, password_hash($password, PASSWORD_DEFAULT), $id]);
@@ -50,4 +50,4 @@ try {
     setFlash('gagal', $pesan);
 }
 
-redirect('../data_siswa.php?tab=guru');
+redirect('../../pages/data_siswa.php?tab=guru');

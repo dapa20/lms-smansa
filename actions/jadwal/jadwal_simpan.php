@@ -1,9 +1,9 @@
-<?php
+﻿<?php
 require_once __DIR__ . '/../../includes/auth.php';
 requireRole('admin');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    redirect('../../kelas_jadwal.php');
+    redirect('../../pages/kelas_jadwal.php');
 }
 
 $id         = (int)($_POST['id'] ?? 0);
@@ -22,7 +22,7 @@ $hariNamaIndo = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu']
 
 if ($guruId === 0 || $mapelId === 0 || $kelasId === 0 || $jamMulai === '' || $jamSelesai === '') {
     setFlash('gagal', 'Data tidak lengkap. Jadwal tidak disimpan.');
-    redirect('../../kelas_jadwal.php');
+    redirect('../../pages/kelas_jadwal.php');
 }
 
 // Jika tanggal spesifik diisi, hari otomatis dihitung dari tanggal tsb.
@@ -31,7 +31,7 @@ if ($tanggal !== '') {
     $namaHari = $hariNamaIndo[(int)date('N', strtotime($tanggal)) - 1];
     if ($namaHari === 'Minggu') {
         setFlash('gagal', 'Tanggal yang dipilih jatuh pada hari Minggu (libur sekolah).');
-        redirect('../../kelas_jadwal.php');
+        redirect('../../pages/kelas_jadwal.php');
     }
     $hari = $namaHari;
 } else {
@@ -52,5 +52,5 @@ if ($id > 0) {
     setFlash('sukses', 'Jadwal berhasil ditambahkan.');
 }
 
-redirect('../kelas_jadwal.php');
+redirect('../../pages/kelas_jadwal.php');
 

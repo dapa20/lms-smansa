@@ -1,9 +1,9 @@
-<?php
+﻿<?php
 require_once __DIR__ . '/../../includes/auth.php';
 requireRole('admin');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    redirect('../../kelas_jadwal.php');
+    redirect('../../pages/kelas_jadwal.php');
 }
 
 $id = (int)($_POST['id'] ?? 0);
@@ -13,4 +13,4 @@ if ($id > 0) {
     setFlash('sukses', 'Jadwal berhasil dihapus.');
 }
 
-redirect('../kelas_jadwal.php');
+redirect('../../pages/kelas_jadwal.php');

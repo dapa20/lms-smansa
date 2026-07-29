@@ -1,9 +1,9 @@
-<?php
+﻿<?php
 require_once __DIR__ . '/../../includes/auth.php';
 requireLogin();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    redirect('../../pengaturan.php');
+    redirect('../../pages/pengaturan.php');
 }
 
 $userId        = (int)$_SESSION['user_id'];
@@ -15,7 +15,7 @@ $bio           = trim($_POST['bio'] ?? '');
 
 if ($namaLengkap === '' || $email === '') {
     setFlash('gagal', 'Nama dan email wajib diisi.');
-    redirect('../../pengaturan.php');
+    redirect('../../pages/pengaturan.php');
 }
 
 // Upload foto baru (opsional)
@@ -46,4 +46,4 @@ try {
     setFlash('gagal', str_contains($e->getMessage(), 'email') ? 'Email tersebut sudah dipakai akun lain.' : 'Gagal menyimpan profil.');
 }
 
-redirect('../pengaturan.php');
+redirect('../../pages/pengaturan.php');

@@ -1,9 +1,9 @@
-<?php
+﻿<?php
 require_once __DIR__ . '/../../includes/auth.php';
 requireLogin();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    redirect('../../data_siswa.php');
+    redirect('../../pages/data_siswa.php');
 }
 
 $id           = (int)($_POST['id'] ?? 0);
@@ -16,7 +16,7 @@ $kelasId      = (int)($_POST['kelas_id'] ?? 0);
 
 if ($namaLengkap === '' || $nis === '' || $nisn === '' || $kelasId === 0) {
     setFlash('gagal', 'Semua kolom wajib diisi. Data siswa tidak disimpan.');
-    redirect('../../data_siswa.php');
+    redirect('../../pages/data_siswa.php');
 }
 
 try {
@@ -37,4 +37,4 @@ try {
     setFlash('gagal', $pesan);
 }
 
-redirect('../data_siswa.php');
+redirect('../../pages/data_siswa.php');

@@ -1,9 +1,9 @@
-<?php
+﻿<?php
 require_once __DIR__ . '/../../includes/auth.php';
 requireLogin();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    redirect('../../rekap_nilai.php');
+    redirect('../../pages/rekap_nilai.php');
 }
 
 $siswaId     = (int)($_POST['siswa_id'] ?? 0);
@@ -25,7 +25,7 @@ $uts    = $bersihkan($_POST['uts'] ?? '');
 $uas    = $bersihkan($_POST['uas'] ?? '');
 
 if ($siswaId === 0 || $mapelId === 0 || $kelasId === 0) {
-    redirect('../../rekap_nilai.php');
+    redirect('../../pages/rekap_nilai.php');
 }
 
 if (!isAdmin()) {
@@ -33,7 +33,7 @@ if (!isAdmin()) {
     $stmt->execute([$_SESSION['user_id'], $kelasId, $mapelId]);
     if ((int)$stmt->fetch()['c'] === 0) {
         setFlash('gagal', 'Anda tidak mengajar mata pelajaran ini di kelas tersebut.');
-        redirect('../../rekap_nilai.php');
+        redirect('../../pages/rekap_nilai.php');
     }
 }
 
@@ -45,4 +45,4 @@ $stmt = $pdo->prepare("INSERT INTO nilai (siswa_id, mapel_id, kelas_id, semester
 $stmt->execute([$siswaId, $mapelId, $kelasId, $semester, $tahunAjaran, $tugas1, $tugas2, $tugas3, $uts, $uas, $catatan ?: null]);
 
 setFlash('sukses', 'Nilai berhasil disimpan.');
-redirect('../../rekap_nilai.php?' . http_build_query(['kelas_id' => $kelasId, 'mapel_id' => $mapelId, 'semester' => $semester, 'tahun_ajaran' => $tahunAjaran]));
+redirect('../../pages/rekap_nilai.php?' . http_build_query(['kelas_id' => $kelasId, 'mapel_id' => $mapelId, 'semester' => $semester, 'tahun_ajaran' => $tahunAjaran]));

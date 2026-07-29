@@ -1,9 +1,9 @@
-<?php
+﻿<?php
 require_once __DIR__ . '/../../includes/auth.php';
 requireLogin();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    redirect('../../tugas_ujian.php');
+    redirect('../../pages/tugas_ujian.php');
 }
 
 $judul    = trim($_POST['judul'] ?? '');
@@ -15,7 +15,7 @@ $deskripsi = trim($_POST['deskripsi'] ?? '');
 
 if ($judul === '' || $mapelId === 0 || $kelasId === 0 || $deadline === '') {
     setFlash('gagal', 'Data tidak lengkap. Tugas/ujian tidak disimpan.');
-    redirect('../../tugas_ujian.php');
+    redirect('../../pages/tugas_ujian.php');
 }
 
 $stmt = $pdo->prepare('INSERT INTO tugas_ujian (judul, jenis, mapel_id, kelas_id, deskripsi, tanggal_deadline, dibuat_oleh, status)
@@ -23,4 +23,4 @@ $stmt = $pdo->prepare('INSERT INTO tugas_ujian (judul, jenis, mapel_id, kelas_id
 $stmt->execute([$judul, $jenis, $mapelId, $kelasId, $deskripsi ?: null, str_replace('T', ' ', $deadline), $_SESSION['user_id']]);
 
 setFlash('sukses', "\"$judul\" berhasil dibuat.");
-redirect('../tugas_ujian.php');
+redirect('../../pages/tugas_ujian.php');

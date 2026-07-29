@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 require_once __DIR__ . '/../includes/auth.php';
 requireLogin();
 
@@ -279,20 +279,84 @@ require_once __DIR__ . '/../includes/topbar.php';
 .badge-sakit  { background: #dbeafe; color: #1e40af; }
 .badge-alpa   { background: #fee2e2; color: #b91c1c; }
 
-/* Absensi radio button styling */
-.absen-radio { display: none; }
-.absen-label {
-    display: inline-flex; align-items: center; gap: 3px;
-    padding: 4px 10px; border-radius: 6px; cursor: pointer;
-    font-size: 11px; font-weight: 600; border: 1.5px solid #e2e8f0;
-    color: #64748b; transition: all 0.15s;
+/* Absensi custom circular radio button styling (Matching reference image) */
+.absen-radio-custom {
+    display: none !important;
+}
+
+.absen-circle-label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 2px solid #cbd5e1;
+    background-color: #ffffff;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
     user-select: none;
 }
-.absen-radio[value="hadir"]:checked + .absen-label { background: #dcfce7; border-color: #16a34a; color: #15803d; }
-.absen-radio[value="izin"]:checked  + .absen-label { background: #fef9c3; border-color: #ca8a04; color: #854d0e; }
-.absen-radio[value="sakit"]:checked + .absen-label { background: #dbeafe; border-color: #3b82f6; color: #1e40af; }
-.absen-radio[value="alpa"]:checked  + .absen-label { background: #fee2e2; border-color: #dc2626; color: #b91c1c; }
-.absen-label:hover { background: #f8fafc; border-color: #94a3b8; }
+
+.absen-circle-label::after {
+    content: '';
+    display: block;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    transform: scale(0);
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.absen-circle-label:hover {
+    border-color: #94a3b8;
+    transform: scale(1.1);
+}
+
+/* Checked State - Present / Hadir (Green) */
+.absen-radio-custom[value="hadir"]:checked + .absen-circle-label {
+    border-color: #22c55e;
+    background-color: #f0fdf4;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
+}
+.absen-radio-custom[value="hadir"]:checked + .absen-circle-label::after {
+    background-color: #22c55e;
+    transform: scale(1);
+}
+
+/* Checked State - Absent / Alpa (Red) */
+.absen-radio-custom[value="alpa"]:checked + .absen-circle-label {
+    border-color: #ef4444;
+    background-color: #fef2f2;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+.absen-radio-custom[value="alpa"]:checked + .absen-circle-label::after {
+    background-color: #ef4444;
+    transform: scale(1);
+}
+
+/* Checked State - Leave / Izin (Amber/Orange) */
+.absen-radio-custom[value="izin"]:checked + .absen-circle-label {
+    border-color: #f59e0b;
+    background-color: #fffbeb;
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
+}
+.absen-radio-custom[value="izin"]:checked + .absen-circle-label::after {
+    background-color: #f59e0b;
+    transform: scale(1);
+}
+
+/* Checked State - Leave / Sakit (Blue) */
+.absen-radio-custom[value="sakit"]:checked + .absen-circle-label {
+    border-color: #3b82f6;
+    background-color: #eff6ff;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+.absen-radio-custom[value="sakit"]:checked + .absen-circle-label::after {
+    background-color: #3b82f6;
+    transform: scale(1);
+}
 </style>
 
 <main class="pt-16 md:ml-[280px] min-h-screen bg-background">
@@ -536,70 +600,107 @@ require_once __DIR__ . '/../includes/topbar.php';
                         <span class="status-badge badge-alpa"  id="count-alpa">Alpa: 0</span>
                     </div>
 
-                    <!-- Tabel Siswa -->
-                    <div class="overflow-x-auto rounded-xl border border-outline-variant/60">
+                    <!-- Tabel Siswa (Clean modern design matching reference image) -->
+                    <div class="overflow-x-auto rounded-2xl border border-slate-200/80 bg-white shadow-xs">
                         <table class="w-full text-left border-collapse">
                             <thead>
-                                <tr class="bg-surface-container-low">
-                                    <th class="px-4 py-3 text-label-sm font-bold text-text-muted uppercase tracking-wide w-10">No</th>
-                                    <th class="px-4 py-3 text-label-sm font-bold text-text-muted uppercase tracking-wide">NIS</th>
-                                    <th class="px-4 py-3 text-label-sm font-bold text-text-muted uppercase tracking-wide">Nama Siswa</th>
-                                    <th class="px-4 py-3 text-label-sm font-bold text-text-muted uppercase tracking-wide text-center">Status Hari Ini</th>
-                                    <th class="px-4 py-3 text-label-sm font-bold text-text-muted uppercase tracking-wide text-center">Hadir</th>
-                                    <th class="px-4 py-3 text-label-sm font-bold text-text-muted uppercase tracking-wide text-center">Izin</th>
-                                    <th class="px-4 py-3 text-label-sm font-bold text-text-muted uppercase tracking-wide text-center">Sakit</th>
-                                    <th class="px-4 py-3 text-label-sm font-bold text-text-muted uppercase tracking-wide text-center">Alpa</th>
+                                <tr class="bg-slate-50/90 border-b border-slate-200/80 text-slate-700">
+                                    <th class="px-5 py-3.5 font-bold text-xs uppercase tracking-wider text-slate-500">Student ID</th>
+                                    <th class="px-5 py-3.5 font-bold text-xs uppercase tracking-wider text-slate-500">Name</th>
+                                    <th class="px-5 py-3.5 font-bold text-xs uppercase tracking-wider text-slate-500 text-center">Present</th>
+                                    <th class="px-5 py-3.5 font-bold text-xs uppercase tracking-wider text-slate-500 text-center">Absent</th>
+                                    <th class="px-5 py-3.5 font-bold text-xs uppercase tracking-wider text-slate-500 text-center">Leave (Izin)</th>
+                                    <th class="px-5 py-3.5 font-bold text-xs uppercase tracking-wider text-slate-500 text-center">Leave (Sakit)</th>
+                                    <th class="px-5 py-3.5 font-bold text-xs uppercase tracking-wider text-slate-500 text-center">Note</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="divide-y divide-slate-100 text-sm">
                                 <?php foreach ($daftarSiswa as $no => $s):
                                     $sid    = (int)$s['id'];
                                     $rekap  = $rekapMap[$sid] ?? [];
                                     $statusHariIni = $s['status_hari_ini'] ?: 'hadir';
                                 ?>
-                                <tr class="border-t border-outline-variant/40 hover:bg-surface-container-low transition-colors <?= $no % 2 === 0 ? '' : 'bg-surface-container-lowest' ?>">
-                                    <td class="px-4 py-3 text-body-sm text-text-muted font-medium"><?= $no + 1 ?></td>
-                                    <td class="px-4 py-3">
-                                        <span class="inline-block bg-primary/10 text-primary text-[11px] font-mono font-semibold px-2 py-0.5 rounded">
-                                            <?= h($s['nis']) ?>
-                                        </span>
-                                    </td>
-                                    <td class="px-4 py-3">
-                                        <div class="flex items-center gap-2">
-                                            <div class="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                                                <span class="text-primary text-[11px] font-bold"><?= mb_strtoupper(mb_substr($s['nama_lengkap'], 0, 1)) ?></span>
-                                            </div>
-                                            <span class="text-body-sm font-medium text-text-main"><?= h($s['nama_lengkap']) ?></span>
-                                        </div>
-                                    </td>
-                                    <td class="px-4 py-3">
-                                        <!-- Hidden input siswa_id dengan index unik per baris -->
+                                <tr class="hover:bg-slate-50/70 transition-colors">
+                                    <!-- Student ID (NIS) -->
+                                    <td class="px-5 py-3.5 font-semibold text-slate-600 font-mono text-xs">
+                                        <!-- Hidden input siswa_id -->
                                         <input type="hidden" name="siswa_id[<?= $no ?>]" value="<?= $sid ?>">
-                                        <!-- Radio group absensi: name pakai index $no agar tiap siswa punya grup sendiri -->
-                                        <div class="flex gap-1 flex-wrap justify-center" data-siswa="<?= $sid ?>">
-                                            <?php foreach (['hadir' => '✓ Hadir', 'izin' => 'Izin', 'sakit' => 'Sakit', 'alpa' => 'Alpa'] as $statusVal => $statusLabel): ?>
-                                            <input type="radio" class="absen-radio" name="status[<?= $no ?>]"
-                                                   id="status-<?= $sid ?>-<?= $statusVal ?>"
-                                                   value="<?= $statusVal ?>"
-                                                   <?= $statusHariIni === $statusVal ? 'checked' : '' ?>
-                                                   onchange="updateRekapBar()">
-                                            <label class="absen-label" for="status-<?= $sid ?>-<?= $statusVal ?>"><?= $statusLabel ?></label>
-                                            <?php endforeach; ?>
+                                        <?= h($s['nis']) ?>
+                                    </td>
+
+                                    <!-- Name -->
+                                    <td class="px-5 py-3.5">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-8 h-8 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center flex-shrink-0 text-slate-700 font-bold text-xs shadow-2xs">
+                                                <?= mb_strtoupper(mb_substr($s['nama_lengkap'], 0, 1)) ?>
+                                            </div>
+                                            <span class="font-semibold text-slate-800 text-body-sm"><?= h($s['nama_lengkap']) ?></span>
                                         </div>
                                     </td>
-                                    <td class="px-4 py-3 text-center text-body-sm font-semibold text-green-700"><?= (int)($rekap['total_hadir'] ?? 0) ?></td>
-                                    <td class="px-4 py-3 text-center text-body-sm font-semibold text-yellow-700"><?= (int)($rekap['total_izin']  ?? 0) ?></td>
-                                    <td class="px-4 py-3 text-center text-body-sm font-semibold text-blue-700"><?= (int)($rekap['total_sakit'] ?? 0) ?></td>
-                                    <td class="px-4 py-3 text-center text-body-sm font-semibold text-red-700"><?= (int)($rekap['total_alpa']  ?? 0) ?></td>
+
+                                    <!-- Present (Hadir) -->
+                                    <td class="px-5 py-3.5 text-center">
+                                        <label class="inline-flex items-center justify-center cursor-pointer p-1" title="Hadir (Present)">
+                                            <input type="radio" class="absen-radio-custom" name="status[<?= $no ?>]"
+                                                   id="status-<?= $sid ?>-hadir" value="hadir"
+                                                   <?= $statusHariIni === 'hadir' ? 'checked' : '' ?>
+                                                   onchange="updateRekapBar()">
+                                            <span class="absen-circle-label"></span>
+                                        </label>
+                                    </td>
+
+                                    <!-- Absent (Alpa) -->
+                                    <td class="px-5 py-3.5 text-center">
+                                        <label class="inline-flex items-center justify-center cursor-pointer p-1" title="Alpa (Absent)">
+                                            <input type="radio" class="absen-radio-custom" name="status[<?= $no ?>]"
+                                                   id="status-<?= $sid ?>-alpa" value="alpa"
+                                                   <?= $statusHariIni === 'alpa' ? 'checked' : '' ?>
+                                                   onchange="updateRekapBar()">
+                                            <span class="absen-circle-label"></span>
+                                        </label>
+                                    </td>
+
+                                    <!-- Leave (Izin) -->
+                                    <td class="px-5 py-3.5 text-center">
+                                        <label class="inline-flex items-center justify-center cursor-pointer p-1" title="Izin (Leave)">
+                                            <input type="radio" class="absen-radio-custom" name="status[<?= $no ?>]"
+                                                   id="status-<?= $sid ?>-izin" value="izin"
+                                                   <?= $statusHariIni === 'izin' ? 'checked' : '' ?>
+                                                   onchange="updateRekapBar()">
+                                            <span class="absen-circle-label"></span>
+                                        </label>
+                                    </td>
+
+                                    <!-- Leave (Sakit) -->
+                                    <td class="px-5 py-3.5 text-center">
+                                        <label class="inline-flex items-center justify-center cursor-pointer p-1" title="Sakit (Sick)">
+                                            <input type="radio" class="absen-radio-custom" name="status[<?= $no ?>]"
+                                                   id="status-<?= $sid ?>-sakit" value="sakit"
+                                                   <?= $statusHariIni === 'sakit' ? 'checked' : '' ?>
+                                                   onchange="updateRekapBar()">
+                                            <span class="absen-circle-label"></span>
+                                        </label>
+                                    </td>
+
+                                    <!-- Note (Edit note / recap summary) -->
+                                    <td class="px-5 py-3.5 text-center">
+                                        <button type="button"
+                                                onclick="alert('Detail Rekap Semester - <?= h(addslashes($s['nama_lengkap'])) ?>:\n\n• Total Hadir: <?= (int)($rekap['total_hadir']??0) ?> kali\n• Total Izin: <?= (int)($rekap['total_izin']??0) ?> kali\n• Total Sakit: <?= (int)($rekap['total_sakit']??0) ?> kali\n• Total Alpa: <?= (int)($rekap['total_alpa']??0) ?> kali')"
+                                                class="inline-flex items-center justify-center w-8 h-8 rounded-lg border border-indigo-200 text-indigo-600 hover:bg-indigo-50 hover:border-indigo-300 transition-colors shadow-2xs"
+                                                title="Lihat Detail Catatan & Rekap Kehadiran">
+                                            <span class="material-symbols-outlined text-[18px]">edit_note</span>
+                                        </button>
+                                    </td>
                                 </tr>
                                 <?php endforeach; ?>
                             </tbody>
                         </table>
                     </div>
+
                     <!-- Bottom Save Button -->
                     <div class="flex justify-end mt-4">
                         <button type="submit"
-                                class="px-6 py-2 rounded-lg text-label-lg font-bold bg-primary text-white hover:bg-primary/90 transition-colors flex items-center gap-2 shadow-sm">
+                                class="px-6 py-2.5 rounded-xl text-label-lg font-bold bg-primary text-white hover:bg-primary/90 transition-colors flex items-center gap-2 shadow-sm">
                             <span class="material-symbols-outlined text-[18px]">save</span> Simpan Absensi
                         </button>
                     </div>
@@ -940,7 +1041,7 @@ function switchTab(tab, btn) {
 // Set semua status absensi ke satu nilai
 // -------------------------------------------------------
 function setAllStatus(status) {
-    document.querySelectorAll('input[type="radio"][value="' + status + '"]').forEach(r => {
+    document.querySelectorAll('input[type="radio"].absen-radio-custom[value="' + status + '"]').forEach(r => {
         r.checked = true;
     });
     updateRekapBar();
@@ -951,7 +1052,7 @@ function setAllStatus(status) {
 // -------------------------------------------------------
 function updateRekapBar() {
     const counts = { hadir: 0, izin: 0, sakit: 0, alpa: 0 };
-    document.querySelectorAll('input[type="radio"].absen-radio:checked').forEach(r => {
+    document.querySelectorAll('input[type="radio"].absen-radio-custom:checked').forEach(r => {
         if (counts[r.value] !== undefined) counts[r.value]++;
     });
     document.getElementById('count-hadir').textContent = 'Hadir: ' + counts.hadir;

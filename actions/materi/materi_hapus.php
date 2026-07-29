@@ -1,9 +1,9 @@
-<?php
+﻿<?php
 require_once __DIR__ . '/../../includes/auth.php';
 requireLogin();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    redirect('../../materi.php');
+    redirect('../../pages/materi.php');
 }
 
 $id = (int)($_POST['id'] ?? 0);
@@ -14,7 +14,7 @@ if ($id > 0) {
 
     if ($materi && !isAdmin() && (int)$materi['diunggah_oleh'] !== (int)$_SESSION['user_id']) {
         setFlash('gagal', 'Anda hanya bisa menghapus materi yang Anda unggah sendiri.');
-        redirect('../../materi.php');
+        redirect('../../pages/materi.php');
     }
 
     if ($materi) {
@@ -28,4 +28,4 @@ if ($id > 0) {
     }
 }
 
-redirect('../materi.php');
+redirect('../../pages/materi.php');

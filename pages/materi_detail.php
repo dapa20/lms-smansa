@@ -151,7 +151,7 @@ require_once __DIR__ . '/../includes/topbar.php';
                                 </button>
 
                                 <?php if (!$isGeneral): ?>
-                                    <form action="actions/materi_action.php?action=delete_section" method="post" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus section ini beserta seluruh raises item di dalamnya?')">
+                                    <form action="../actions/materi/materi_action.php?action=delete_section" method="post" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus section ini beserta seluruh raises item di dalamnya?')">
                                         <input type="hidden" name="section_id" value="<?= $sec['id'] ?>">
                                         <input type="hidden" name="kelas_id" value="<?= $kelasId ?>">
                                         <input type="hidden" name="mapel_id" value="<?= $mapelId ?>">
@@ -334,7 +334,7 @@ require_once __DIR__ . '/../includes/topbar.php';
                                                         </div>
 
                                                         <!-- Form Tulis Balasan Komentar -->
-                                                        <form action="actions/materi_action.php?action=add_reply" method="post" class="mt-3 flex gap-2">
+                                                        <form action="../actions/materi/materi_action.php?action=add_reply" method="post" class="mt-3 flex gap-2">
                                                             <input type="hidden" name="item_id" value="<?= $item['id'] ?>">
                                                             <input type="hidden" name="kelas_id" value="<?= $kelasId ?>">
                                                             <input type="hidden" name="mapel_id" value="<?= $mapelId ?>">
@@ -351,7 +351,7 @@ require_once __DIR__ . '/../includes/topbar.php';
                                         </div>
 
                                         <!-- Hapus Item Konten -->
-                                        <form action="actions/materi_action.php?action=delete_item" method="post" onsubmit="return confirm('Hapus item konten ini?')" class="flex-shrink-0">
+                                        <form action="../actions/materi/materi_action.php?action=delete_item" method="post" onsubmit="return confirm('Hapus item konten ini?')" class="flex-shrink-0">
                                             <input type="hidden" name="item_id" value="<?= $item['id'] ?>">
                                             <input type="hidden" name="kelas_id" value="<?= $kelasId ?>">
                                             <input type="hidden" name="mapel_id" value="<?= $mapelId ?>">
@@ -439,7 +439,7 @@ require_once __DIR__ . '/../includes/topbar.php';
                 <span class="material-symbols-outlined">close</span>
             </button>
         </div>
-        <form action="actions/materi_action.php?action=add_section" method="post" class="space-y-md">
+        <form action="../actions/materi/materi_action.php?action=add_section" method="post" class="space-y-md">
             <input type="hidden" name="kelas_id" value="<?= $kelasId ?>">
             <input type="hidden" name="mapel_id" value="<?= $mapelId ?>">
 
@@ -470,7 +470,7 @@ require_once __DIR__ . '/../includes/topbar.php';
                 <span class="material-symbols-outlined">close</span>
             </button>
         </div>
-        <form action="actions/materi_action.php?action=edit_section" method="post" class="space-y-md">
+        <form action="../actions/materi/materi_action.php?action=edit_section" method="post" class="space-y-md">
             <input type="hidden" name="section_id" id="edit-section-id">
             <input type="hidden" name="kelas_id" value="<?= $kelasId ?>">
             <input type="hidden" name="mapel_id" value="<?= $mapelId ?>">
@@ -506,7 +506,7 @@ require_once __DIR__ . '/../includes/topbar.php';
             </button>
         </div>
 
-        <form action="actions/materi_action.php?action=add_item" method="post" enctype="multipart/form-data" class="space-y-md">
+        <form action="../actions/materi/materi_action.php?action=add_item" method="post" enctype="multipart/form-data" class="space-y-md">
             <input type="hidden" name="section_id" id="add-item-section-id">
             <input type="hidden" name="kelas_id" value="<?= $kelasId ?>">
             <input type="hidden" name="mapel_id" value="<?= $mapelId ?>">

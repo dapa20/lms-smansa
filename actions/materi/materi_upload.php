@@ -1,9 +1,9 @@
-<?php
+﻿<?php
 require_once __DIR__ . '/../../includes/auth.php';
 requireLogin();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    redirect('../../materi.php');
+    redirect('../../pages/materi.php');
 }
 
 $judul        = trim($_POST['judul'] ?? '');
@@ -13,7 +13,7 @@ $semester     = in_array($_POST['semester'] ?? '', ['Ganjil', 'Genap']) ? $_POST
 
 if ($judul === '' || $mapelId === 0 || empty($_FILES['file_materi']) || $_FILES['file_materi']['error'] !== UPLOAD_ERR_OK) {
     setFlash('gagal', 'Upload gagal. Pastikan judul diisi dan file berhasil dipilih.');
-    redirect('../../materi.php');
+    redirect('../../pages/materi.php');
 }
 
 $file        = $_FILES['file_materi'];
@@ -29,11 +29,11 @@ $ekstensiAsli = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
 
 if ($file['size'] > $ukuranMax) {
     setFlash('gagal', 'Upload gagal. Ukuran file maksimal adalah 50MB.');
-    redirect('../../materi.php');
+    redirect('../../pages/materi.php');
 }
 if (!isset($ekstensiMap[$ekstensiAsli])) {
     setFlash('gagal', 'Upload gagal. Format file tidak didukung.');
-    redirect('../../materi.php');
+    redirect('../../pages/materi.php');
 }
 
 $tipeFile     = $ekstensiMap[$ekstensiAsli];
@@ -42,7 +42,7 @@ $tujuan       = __DIR__ . '/../../uploads/materi/' . $namaFileBaru;
 
 if (!move_uploaded_file($file['tmp_name'], $tujuan)) {
     setFlash('gagal', 'Upload gagal. File tidak dapat disimpan di server.');
-    redirect('../../materi.php');
+    redirect('../../pages/materi.php');
 }
 
 $stmt = $pdo->prepare('INSERT INTO materi (judul, mapel_id, kelas_tingkat, semester, tipe_file, nama_file, nama_file_asli, ukuran_file, diunggah_oleh)
@@ -50,4 +50,4 @@ $stmt = $pdo->prepare('INSERT INTO materi (judul, mapel_id, kelas_tingkat, semes
 $stmt->execute([$judul, $mapelId, $kelasTingkat, $semester, $tipeFile, $namaFileBaru, $file['name'], $file['size'], $_SESSION['user_id']]);
 
 setFlash('sukses', "Materi \"$judul\" berhasil diunggah.");
-redirect('../materi.php');
+redirect('../../pages/materi.php');
