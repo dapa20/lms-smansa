@@ -4,3 +4,10 @@
 !/uploads/materi/.gitkeep
 .DS_Store
 Thumbs.db
+
+# Google Sheets API - JANGAN commit credential ke Git!
+config/service_account.json
+
+# Composer dependencies
+/vendor/
+composer.lock

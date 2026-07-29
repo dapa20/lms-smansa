@@ -124,6 +124,14 @@ require_once __DIR__ . '/../includes/topbar.php';
 <main class="pt-16 md:ml-[280px] min-h-screen bg-background">
     <div class="p-md md:p-lg max-w-[1440px] mx-auto">
         <?php renderFlash(); ?>
+        <?php if (!empty($_GET['error'])): ?>
+            <div class="mb-6 p-4 rounded-xl bg-error-container text-on-error-container border border-error/20 flex items-start gap-3 shadow-xs">
+                <span class="material-symbols-outlined text-error flex-shrink-0 mt-0.5">error</span>
+                <div class="text-body-sm font-medium">
+                    <?= h($_GET['error']) ?>
+                </div>
+            </div>
+        <?php endif; ?>
 
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-lg gap-4">
             <div>
@@ -132,13 +140,16 @@ require_once __DIR__ . '/../includes/topbar.php';
             </div>
             <?php if ($kelasId && $mapelId): ?>
                 <div class="flex flex-wrap gap-2">
-                    <button type="button" onclick="openSpreadsheetPreview()"
-                            class="bg-[#107c41] hover:bg-[#0b5c30] text-white px-5 py-2 rounded-lg text-label-lg font-label-lg flex items-center gap-2 transition-colors shadow-sm cursor-pointer">
-                        <span class="material-symbols-outlined">table_view</span> Pratinjau Spreadsheet
-                    </button>
+                    <a href="../actions/nilai/export_to_gsheets.php?<?= http_build_query(['kelas_id' => $kelasId, 'mapel_id' => $mapelId, 'semester' => $semester, 'tahun_ajaran' => $tahunAjaran]) ?>"
+                       target="_blank"
+                       class="bg-[#0f9d58] hover:bg-[#0b8043] text-white px-5 py-2 rounded-lg text-label-lg font-label-lg flex items-center gap-2 transition-colors shadow-sm"
+                       title="Buat Google Spreadsheet baru dengan data nilai sudah terisi">
+                        <svg class="w-5 h-5 fill-current flex-shrink-0" viewBox="0 0 24 24"><path d="M11.318 12.545H7.91v-1.909h3.41v1.91zm4.26 0h-3.41v-1.909h3.41v1.91zm0 3.273h-3.41V13.91h3.41v1.91zm-4.26 0H7.91V13.91h3.41v1.91zM20.727 6h-5.455V4.364A.364.364 0 0 0 14.91 4H9.09a.364.364 0 0 0-.363.364V6H3.273A1.273 1.273 0 0 0 2 7.273v12.454A1.273 1.273 0 0 0 3.273 21h17.454A1.273 1.273 0 0 0 22 19.727V7.273A1.273 1.273 0 0 0 20.727 6zm-11.636-.727h5.818v.727H9.09v-.727zm10.91 14.09H4V10h16v9.363z"/></svg>
+                        Buka di Google Sheets
+                    </a>
                     <a href="export_nilai.php?<?= http_build_query(['kelas_id' => $kelasId, 'mapel_id' => $mapelId, 'semester' => $semester, 'tahun_ajaran' => $tahunAjaran, 'format' => 'excel']) ?>"
                        class="bg-surface-white border border-outline-variant hover:border-primary hover:text-primary text-text-main px-5 py-2 rounded-lg text-label-lg font-label-lg flex items-center gap-2 transition-colors shadow-sm">
-                        <span class="material-symbols-outlined">download</span> Ekspor ke Excel (.xls)
+                        <span class="material-symbols-outlined">download</span> Unduh Excel (.xls)
                     </a>
                 </div>
             <?php endif; ?>
@@ -279,162 +290,4 @@ require_once __DIR__ . '/../includes/topbar.php';
         <?php endif; ?>
     </div>
 </div>
-
-<!-- ============================================================= -->
-<!-- MODAL: SPREADSHEET PREVIEW (Excel / Google Sheets Style)       -->
-<!-- ============================================================= -->
-<div id="spreadsheet-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-3 md:p-6 bg-slate-900/60 backdrop-blur-sm">
-    <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-6xl max-h-[92vh] flex flex-col border border-slate-300 overflow-hidden">
-        
-        <!-- Header Bar Excel / Spreadsheet Theme -->
-        <div class="bg-[#107c41] text-white px-5 py-3 flex items-center justify-between flex-shrink-0">
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center flex-shrink-0">
-                    <span class="material-symbols-outlined text-[20px] text-white">grid_on</span>
-                </div>
-                <div>
-                    <h3 class="font-bold text-sm leading-tight">
-                        Pratinjau Spreadsheet: Rekap_Nilai_<?= h($namaKelasAktif) ?>_<?= h($namaMapelAktif) ?>.xlsx
-                    </h3>
-                    <p class="text-[11px] text-white/80 font-mono">
-                        Semester <?= h($semester) ?> • Tahun Ajaran <?= h($tahunAjaran) ?>
-                    </p>
-                </div>
-            </div>
-            <div class="flex items-center gap-2">
-                <a href="export_nilai.php?<?= http_build_query(['kelas_id' => $kelasId, 'mapel_id' => $mapelId, 'semester' => $semester, 'tahun_ajaran' => $tahunAjaran]) ?>"
-                   class="px-4 py-1.5 rounded-lg bg-white text-[#107c41] hover:bg-slate-100 text-xs font-bold transition-colors flex items-center gap-1.5 shadow-sm">
-                    <span class="material-symbols-outlined text-[16px]">download</span> Unduh Excel (CSV)
-                </a>
-                <button type="button" onclick="closeSpreadsheetPreview()" class="text-white/80 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-colors">
-                    <span class="material-symbols-outlined text-[22px]">close</span>
-                </button>
-            </div>
-        </div>
-
-        <!-- Formula / Toolbar Bar -->
-        <div class="bg-slate-100 border-b border-slate-300 px-4 py-2 flex items-center gap-3 text-xs text-slate-600 flex-shrink-0">
-            <span class="font-mono font-bold bg-white px-2 py-1 rounded border border-slate-300 text-slate-800 text-[11px]">fx</span>
-            <div class="flex-1 bg-white px-3 py-1 rounded border border-slate-300 font-mono text-[12px] text-slate-700 truncate">
-                =ROUND(AVERAGE(D4:F4)*0.3 + G4*0.3 + H4*0.4, 1)
-            </div>
-            <div class="hidden sm:flex items-center gap-1.5 text-[11px] text-slate-600 font-medium border-l border-slate-300 pl-3">
-                <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span> Mode Pratinjau Spreadsheet
-            </div>
-        </div>
-
-        <!-- Grid Body Table (Scrollable Excel Sheet) -->
-        <div class="flex-1 overflow-auto p-4 bg-slate-200/50">
-            <div class="bg-white rounded-xl shadow-xs border border-slate-300 overflow-hidden min-w-[850px]">
-                <table class="w-full text-xs text-left border-collapse font-sans">
-                    <!-- Column Header A, B, C... -->
-                    <thead>
-                        <tr class="bg-slate-200/80 text-slate-600 text-center font-mono font-bold text-[11px] border-b border-slate-300 select-none">
-                            <th class="w-10 px-2 py-1.5 bg-slate-300/70 border-r border-slate-300">#</th>
-                            <th class="w-24 px-3 py-1.5 border-r border-slate-300">A</th>
-                            <th class="w-28 px-3 py-1.5 border-r border-slate-300">B</th>
-                            <th class="px-4 py-1.5 border-r border-slate-300 text-left">C</th>
-                            <th class="w-16 px-2 py-1.5 border-r border-slate-300">D</th>
-                            <th class="w-16 px-2 py-1.5 border-r border-slate-300">E</th>
-                            <th class="w-16 px-2 py-1.5 border-r border-slate-300">F</th>
-                            <th class="w-16 px-2 py-1.5 border-r border-slate-300">G</th>
-                            <th class="w-16 px-2 py-1.5 border-r border-slate-300">H</th>
-                            <th class="w-20 px-2 py-1.5 border-r border-slate-300">I</th>
-                            <th class="px-3 py-1.5 text-left">J</th>
-                        </tr>
-                        <!-- Document Title Row -->
-                        <tr class="bg-emerald-50 text-emerald-900 border-b border-slate-300 font-bold">
-                            <td class="text-center bg-slate-100 text-slate-500 font-mono border-r border-slate-300 py-2">1</td>
-                            <td colspan="10" class="px-4 py-2 text-sm">
-                                REKAP NILAI SISWA — <?= mb_strtoupper(h($namaMapelAktif)) ?> (<?= h($namaKelasAktif) ?>) — SEMESTER <?= mb_strtoupper(h($semester)) ?> <?= h($tahunAjaran) ?>
-                            </td>
-                        </tr>
-                        <!-- Empty Spacer Row -->
-                        <tr class="bg-white border-b border-slate-200">
-                            <td class="text-center bg-slate-100 text-slate-500 font-mono border-r border-slate-300 py-1">2</td>
-                            <td colspan="10" class="py-1"></td>
-                        </tr>
-                        <!-- Sheet Data Header Row -->
-                        <tr class="bg-slate-100 font-bold text-slate-800 border-b-2 border-slate-400">
-                            <td class="text-center bg-slate-200/80 text-slate-500 font-mono border-r border-slate-300 py-2">3</td>
-                            <td class="px-3 py-2 border-r border-slate-300 font-mono">NIS</td>
-                            <td class="px-3 py-2 border-r border-slate-300 font-mono">NISN</td>
-                            <td class="px-4 py-2 border-r border-slate-300">Nama Lengkap</td>
-                            <td class="px-2 py-2 border-r border-slate-300 text-center">Tugas 1</td>
-                            <td class="px-2 py-2 border-r border-slate-300 text-center">Tugas 2</td>
-                            <td class="px-2 py-2 border-r border-slate-300 text-center">Tugas 3</td>
-                            <td class="px-2 py-2 border-r border-slate-300 text-center">UTS</td>
-                            <td class="px-2 py-2 border-r border-slate-300 text-center">UAS</td>
-                            <td class="px-2 py-2 border-r border-slate-300 text-center bg-emerald-100/80 text-emerald-900">Nilai Akhir</td>
-                            <td class="px-3 py-2">Catatan</td>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-200 text-slate-800">
-                        <?php if (empty($daftarNilai)): ?>
-                            <tr>
-                                <td class="text-center bg-slate-100 text-slate-500 font-mono border-r border-slate-300 py-4">4</td>
-                                <td colspan="10" class="p-4 text-center text-slate-500 italic">Tidak ada data nilai untuk ditampilkan.</td>
-                            </tr>
-                        <?php endif; ?>
-                        <?php foreach ($daftarNilai as $idx => $row): ?>
-                            <tr class="hover:bg-amber-50/60 transition-colors">
-                                <td class="text-center bg-slate-100 text-slate-500 font-mono border-r border-slate-300 py-2"><?= $idx + 4 ?></td>
-                                <td class="px-3 py-2 border-r border-slate-200 font-mono text-slate-600"><?= h($row['nis']) ?></td>
-                                <td class="px-3 py-2 border-r border-slate-200 font-mono text-slate-600"><?= h($row['nisn'] ?? '-') ?></td>
-                                <td class="px-4 py-2 border-r border-slate-200 font-semibold text-slate-900"><?= h($row['nama_lengkap']) ?></td>
-                                <td class="px-2 py-2 border-r border-slate-200 text-center font-mono"><?= $row['tugas_1'] ?? '-' ?></td>
-                                <td class="px-2 py-2 border-r border-slate-200 text-center font-mono"><?= $row['tugas_2'] ?? '-' ?></td>
-                                <td class="px-2 py-2 border-r border-slate-200 text-center font-mono"><?= $row['tugas_3'] ?? '-' ?></td>
-                                <td class="px-2 py-2 border-r border-slate-200 text-center font-mono"><?= $row['uts'] ?? '-' ?></td>
-                                <td class="px-2 py-2 border-r border-slate-200 text-center font-mono"><?= $row['uas'] ?? '-' ?></td>
-                                <td class="px-2 py-2 border-r border-slate-200 text-center font-mono font-bold bg-emerald-50/70 text-emerald-800">
-                                    <?= $row['nilai_akhir'] ?? '-' ?>
-                                </td>
-                                <td class="px-3 py-2 text-slate-600 italic"><?= h($row['catatan'] ?? '-') ?></td>
-                            </tr>
-                        <?php endforeach; ?>
-
-                        <!-- Row Summary Statistics -->
-                        <?php $rowStatIdx = count($daftarNilai) + 4; ?>
-                        <tr class="bg-slate-100 font-bold border-t-2 border-slate-300">
-                            <td class="text-center bg-slate-200 text-slate-500 font-mono border-r border-slate-300 py-2"><?= $rowStatIdx ?></td>
-                            <td colspan="8" class="px-4 py-2 border-r border-slate-300 text-right text-slate-700 uppercase tracking-wide text-[11px]">Rata-rata Kelas:</td>
-                            <td class="px-2 py-2 border-r border-slate-300 text-center font-mono font-extrabold text-emerald-800 bg-emerald-100/90"><?= $rataKelas ?? '-' ?></td>
-                            <td class="px-3 py-2"></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Footer Bar Spreadsheet -->
-        <div class="bg-slate-100 border-t border-slate-300 px-5 py-2.5 flex items-center justify-between flex-shrink-0 text-xs">
-            <div class="flex items-center gap-2">
-                <span class="px-3 py-1 bg-white border border-slate-300 rounded font-semibold text-emerald-800 shadow-2xs flex items-center gap-1.5">
-                    <span class="material-symbols-outlined text-[16px] text-emerald-600">table</span> Sheet1
-                </span>
-                <span class="text-slate-500 text-[11px] font-mono"><?= count($daftarNilai) ?> baris data siswa</span>
-            </div>
-            <div class="flex items-center gap-3">
-                <button type="button" onclick="closeSpreadsheetPreview()" class="px-4 py-1.5 rounded-lg border border-slate-300 hover:bg-slate-200 text-slate-700 font-semibold transition-colors">
-                    Tutup Pratinjau
-                </button>
-                <a href="export_nilai.php?<?= http_build_query(['kelas_id' => $kelasId, 'mapel_id' => $mapelId, 'semester' => $semester, 'tahun_ajaran' => $tahunAjaran, 'format' => 'excel']) ?>"
-                   class="px-5 py-1.5 rounded-lg bg-[#107c41] hover:bg-[#0b5c30] text-white font-bold transition-colors flex items-center gap-2 shadow-sm">
-                    <span class="material-symbols-outlined text-[18px]">download</span> Unduh Excel (.xls)
-                </a>
-            </div>
-        </div>
-
-    </div>
-</div>
-
-<script>
-function openSpreadsheetPreview() {
-    document.getElementById('spreadsheet-modal').classList.remove('hidden');
-}
-function closeSpreadsheetPreview() {
-    document.getElementById('spreadsheet-modal').classList.add('hidden');
-}
-</script>
 

@@ -12,7 +12,7 @@
 
 if (!defined('GOOGLE_CLIENT_ID')) {
     // Ganti dengan Google Client ID Anda dari Google Cloud Console
-    define('GOOGLE_CLIENT_ID', getenv('GOOGLE_CLIENT_ID') ?: 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com');
+    define('GOOGLE_CLIENT_ID', getenv('GOOGLE_CLIENT_ID') ?: '510485963991-9g90gib604hs137q0efh9i4povaecc7a.apps.googleusercontent.com');
 }
 
 /**
