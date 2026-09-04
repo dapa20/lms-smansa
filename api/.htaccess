@@ -1,0 +1,19 @@
+# Blokir akses langsung ke config
+<Files "config.php">
+    Require all denied
+</Files>
+
+# Blokir listing direktori
+Options -Indexes
+
+# ─── Perbaikan header Authorization untuk XAMPP ───────────────────────
+# Apache/XAMPP di Windows sering TIDAK meneruskan header Authorization
+# ke PHP. Aturan berikut memastikan token Bearer tetap sampai ke PHP.
+RewriteEngine On
+RewriteCond %{HTTP:Authorization} .
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+<IfModule mod_setenvif.c>
+    SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
+</IfModule>
+

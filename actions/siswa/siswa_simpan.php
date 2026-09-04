@@ -25,9 +25,12 @@ try {
         $stmt->execute([$namaLengkap, $nis, $nisn, $jenisKelamin, $status, $kelasId, $id]);
         setFlash('sukses', "Data siswa \"$namaLengkap\" berhasil diperbarui.");
     } else {
-        $stmt = $pdo->prepare('INSERT INTO siswa (nama_lengkap, nis, nisn, jenis_kelamin, status, kelas_id) VALUES (?,?,?,?,?,?)');
-        $stmt->execute([$namaLengkap, $nis, $nisn, $jenisKelamin, $status, $kelasId]);
-        setFlash('sukses', "Siswa \"$namaLengkap\" berhasil ditambahkan.");
+        // Password default untuk siswa baru: siswa123 (di-hash bcrypt)
+        // Password ini bisa diganti/dikelola kemudian melalui fitur reset di aplikasi.
+        $passwordDefault = password_hash('siswa123', PASSWORD_DEFAULT);
+        $stmt = $pdo->prepare('INSERT INTO siswa (nama_lengkap, nis, nisn, jenis_kelamin, status, kelas_id, password) VALUES (?,?,?,?,?,?,?)');
+        $stmt->execute([$namaLengkap, $nis, $nisn, $jenisKelamin, $status, $kelasId, $passwordDefault]);
+        setFlash('sukses', "Siswa \"$namaLengkap\" berhasil ditambahkan. Password default: siswa123");
     }
 } catch (PDOException $e) {
     // Kemungkinan besar NISN duplikat (UNIQUE constraint)
