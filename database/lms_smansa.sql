@@ -193,7 +193,8 @@ CREATE TABLE IF NOT EXISTS nilai (
 -- ---------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS pengumuman (
     id                  INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    judul               VARCHAR(200)        NOT NULL,
+    judul               VARCHAR(200)        DEFAULT 'Pengumuman',
+    kepada              VARCHAR(255)        DEFAULT 'Semua',
     isi                 TEXT                NOT NULL,
     kategori            ENUM('penting','informasi') NOT NULL DEFAULT 'informasi',
     dibuat_oleh         INT UNSIGNED        NOT NULL,

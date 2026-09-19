@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 require_once __DIR__ . '/includes/auth.php';
 requireLogin();
 require_once __DIR__ . '/includes/functions.php';
@@ -52,32 +52,46 @@ $stmt->execute($isAdmin ? [$hariIni] : [$hariIni, $guruId]);
 $jadwalHariIni = $stmt->fetchAll();
 $sekarang = date('H:i:s');
 
-// Pengumuman
+// Pengumuman (widget read-only di dashboard)
 $pengumuman = $pdo->query("SELECT p.*, u.nama_lengkap FROM pengumuman p
                             JOIN users u ON u.id = p.dibuat_oleh
-                            ORDER BY p.created_at DESC LIMIT 2")->fetchAll();
+                            ORDER BY p.created_at DESC LIMIT 5")->fetchAll();
 
 require_once __DIR__ . '/includes/head.php';
 require_once __DIR__ . '/includes/sidebar.php';
 require_once __DIR__ . '/includes/topbar.php';
 ?>
 <main class="pt-16 md:ml-[280px] min-h-screen bg-[#f3f4f6]">
-    <div class="p-md md:p-lg max-w-[1440px] mx-auto space-y-lg">
+    <div class="p-4 md:p-6 max-w-[1440px] mx-auto space-y-6">
         <?php renderFlash(); ?>
 
-        <!-- Judul Halaman Dashboard / Profil (Persis Gambar Referensi User) -->
+        <!-- Shortcut Admin ke halaman Pengumuman -->
+        <?php if ($isAdmin): ?>
+            <div class="bg-blue-50 border border-blue-200/80 rounded-xl px-6 py-4 flex items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-blue-600 text-[24px]">campaign</span>
+                    <div>
+                        <p class="font-bold text-blue-800 text-sm">Kelola Pengumuman Sekolah</p>
+                        <p class="text-xs text-blue-600/80">Tulis, edit, dan hapus pengumuman untuk siswa &amp; guru.</p>
+                    </div>
+                </div>
+                <a href="pages/pengumuman.php" class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-lg flex items-center gap-2 transition-colors flex-shrink-0">
+                    <span class="material-symbols-outlined text-[17px]">open_in_new</span> Buka Halaman Pengumuman
+                </a>
+            </div>
+        <?php endif; ?>
+        <!-- Judul Halaman Profil Pengguna -->
         <div class="border-b border-outline-variant/60 pb-3">
             <h2 class="text-headline-md font-headline-md font-bold text-text-main">
                 Profil Pengguna - <?= strtoupper(h($user['nama_lengkap'])) ?>
             </h2>
         </div>
 
-        <!-- Layout 2 Kartu Profil (Persis Gambar Referensi User) -->
+        <!-- Layout 2 Kartu Profil -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-lg items-start">
             
-            <!-- Kartu Kiri: Foto, Nama, NIP, Guru Mapel (5 Kolom) -->
+            <!-- Kartu Kiri: Foto, Nama, NIP, Guru Mapel -->
             <div class="lg:col-span-5 bg-white rounded-2xl p-xl shadow-sm border border-outline-variant/70 text-center flex flex-col items-center">
-                <!-- Foto Profil (Circular dengan Border Merah Merona / Accent halus) -->
                 <div class="w-36 h-36 rounded-full overflow-hidden border-4 border-red-500/80 shadow-md mb-4 flex-shrink-0 bg-surface-container flex items-center justify-center">
                     <?php if (!empty($user['foto'])): ?>
                         <img src="<?= APP_URL ?>/uploads/avatar/<?= h($user['foto']) ?>" alt="<?= h($user['nama_lengkap']) ?>" class="w-full h-full object-cover">
@@ -86,12 +100,10 @@ require_once __DIR__ . '/includes/topbar.php';
                     <?php endif; ?>
                 </div>
 
-                <!-- Nama Lengkap di Bawah Foto -->
                 <h3 class="font-title-lg text-title-lg font-bold text-text-main mb-6 uppercase tracking-wide">
                     <?= h($user['nama_lengkap']) ?>
                 </h3>
 
-                <!-- Detail Isian Kiri (Nama Pengguna, NIP, Guru Mapel) -->
                 <div class="w-full space-y-4 text-left border-t border-outline-variant/40 pt-4">
                     <div>
                         <div class="flex items-center gap-1.5 text-amber-600 font-label-md font-bold mb-0.5">
@@ -116,11 +128,10 @@ require_once __DIR__ . '/includes/topbar.php';
                 </div>
             </div>
 
-            <!-- Kartu Kanan: Wali Kelas, Kelas Diwali, Agama, Email, No Telp & Tombol Aksi (7 Kolom) -->
+            <!-- Kartu Kanan: Wali Kelas, Status, Agama, Email, No Telp & Tombol Aksi -->
             <div class="lg:col-span-7 bg-white rounded-2xl p-xl shadow-sm border border-outline-variant/70 flex flex-col justify-between min-h-[420px]">
                 
                 <div class="space-y-5">
-                    <!-- Wali Kelas -->
                     <div>
                         <div class="flex items-center gap-2 text-sky-600 font-label-lg font-bold mb-0.5">
                             <span class="material-symbols-outlined text-[20px]">sentiment_satisfied</span> Wali Kelas
@@ -130,7 +141,6 @@ require_once __DIR__ . '/includes/topbar.php';
                         </p>
                     </div>
 
-                    <!-- Status -->
                     <div>
                         <div class="flex items-center gap-2 text-emerald-600 font-label-lg font-bold mb-0.5">
                             <span class="material-symbols-outlined text-[20px]">school</span> Status
@@ -140,7 +150,6 @@ require_once __DIR__ . '/includes/topbar.php';
                         </p>
                     </div>
 
-                    <!-- Agama -->
                     <div>
                         <div class="flex items-center gap-2 text-sky-600 font-label-lg font-bold mb-0.5">
                             <span class="material-symbols-outlined text-[20px]">star</span> Agama
@@ -150,7 +159,6 @@ require_once __DIR__ . '/includes/topbar.php';
                         </p>
                     </div>
 
-                    <!-- Email -->
                     <div>
                         <div class="flex items-center gap-2 text-rose-600 font-label-lg font-bold mb-0.5">
                             <span class="material-symbols-outlined text-[20px]">mail</span> Email
@@ -160,7 +168,6 @@ require_once __DIR__ . '/includes/topbar.php';
                         </p>
                     </div>
 
-                    <!-- No Telp -->
                     <div>
                         <div class="flex items-center gap-2 text-indigo-600 font-label-lg font-bold mb-0.5">
                             <span class="material-symbols-outlined text-[20px]">call</span> No. Telp / WhatsApp
@@ -171,7 +178,6 @@ require_once __DIR__ . '/includes/topbar.php';
                     </div>
                 </div>
 
-                <!-- Baris Tombol Aksi di Bawah Kartu Kanan (Persis 3 Tombol Gambar Referensi User) -->
                 <div class="pt-6 mt-6 border-t border-outline-variant/40 flex flex-wrap items-center gap-3">
                     <button type="button" onclick="window.location.reload()" 
                             class="bg-amber-500 hover:bg-amber-600 text-white font-label-md text-label-md font-bold px-4 py-2.5 rounded-lg flex items-center gap-2 transition-colors shadow-sm">
@@ -192,7 +198,7 @@ require_once __DIR__ . '/includes/topbar.php';
             </div>
         </div>
 
-        <!-- Bagian Jadwal & Pengumuman Sekolah (Tambahan Widget di Bawah Profil) -->
+        <!-- Bagian Jadwal & Pengumuman Sekolah -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-lg pt-4">
             
             <!-- Jadwal Mengajar Hari Ini -->
@@ -254,7 +260,7 @@ require_once __DIR__ . '/includes/topbar.php';
                                 <span class="text-body-xs text-text-muted"><?= h(waktuRelatif($p['created_at'])) ?></span>
                             </div>
                             <h4 class="text-body-md font-bold text-text-main mb-1"><?= h($p['judul']) ?></h4>
-                            <p class="text-body-xs text-text-muted line-clamp-2"><?= h($p['isi']) ?></p>
+                            <p class="text-body-xs text-text-muted line-clamp-2"><?= strip_tags($p['isi']) ?></p>
                         </div>
                     <?php endforeach; ?>
                 </div>
@@ -264,5 +270,111 @@ require_once __DIR__ . '/includes/topbar.php';
 
     </div>
 </main>
+
+<script>
+    function formatDoc(cmd, value = null) {
+        document.execCommand(cmd, false, value);
+        document.getElementById('editor').focus();
+    }
+
+    let alignIndex = 0;
+    const aligns = ['justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull'];
+    function toggleAlign() {
+        alignIndex = (alignIndex + 1) % aligns.length;
+        formatDoc(aligns[alignIndex]);
+    }
+
+    function insertTable() {
+        const rows = prompt("Jumlah Baris:", "2");
+        const cols = prompt("Jumlah Kolom:", "2");
+        if (rows && cols) {
+            let html = '<table class="w-full border-collapse border border-gray-300 my-2"><tbody>';
+            for (let i = 0; i < parseInt(rows); i++) {
+                html += '<tr>';
+                for (let j = 0; j < parseInt(cols); j++) {
+                    html += '<td class="border border-gray-300 p-2">Teks</td>';
+                }
+                html += '</tr>';
+            }
+            html += '</tbody></table>';
+            formatDoc('insertHTML', html);
+        }
+    }
+
+    function insertLink() {
+        const url = prompt("Masukkan URL Tautan:", "https://");
+        if (url) formatDoc('createLink', url);
+    }
+
+    function insertImage() {
+        const url = prompt("Masukkan URL Gambar:", "https://");
+        if (url) formatDoc('insertImage', url);
+    }
+
+    function insertVideo() {
+        const url = prompt("Masukkan URL Embed Video (Youtube):", "");
+        if (url) {
+            let embedUrl = url;
+            if (url.includes('watch?v=')) {
+                embedUrl = url.replace('watch?v=', 'embed/');
+            }
+            const iframe = `<iframe width="100%" height="315" src="${embedUrl}" frameborder="0" allowfullscreen class="my-2 rounded-lg"></iframe>`;
+            formatDoc('insertHTML', iframe);
+        }
+    }
+
+    function toggleFullscreen() {
+        const editorBox = document.getElementById('editor').closest('.border');
+        if (editorBox) {
+            editorBox.classList.toggle('fixed');
+            editorBox.classList.toggle('inset-4');
+            editorBox.classList.toggle('z-50');
+            editorBox.classList.toggle('bg-white');
+        }
+    }
+
+    let isCode = false;
+    function toggleCodeView() {
+        const editor = document.getElementById('editor');
+        if (!isCode) {
+            editor.innerText = editor.innerHTML;
+            isCode = true;
+        } else {
+            editor.innerHTML = editor.innerText;
+            isCode = false;
+        }
+    }
+
+    function showHelp() {
+        alert("Gunakan toolbar di atas untuk memformat teks pengumuman. Anda dapat menebalkan teks, membuat daftar, menyisipkan gambar, tabel, dan tautan.");
+    }
+
+    document.getElementById('formPengumuman')?.addEventListener('submit', function(e) {
+        const editor = document.getElementById('editor');
+        const hiddenIsi = document.getElementById('hiddenIsi');
+        if (isCode) {
+            hiddenIsi.value = editor.innerText;
+        } else {
+            hiddenIsi.value = editor.innerHTML.trim();
+        }
+    });
+
+    const editorEl = document.getElementById('editor');
+    if (editorEl) {
+        editorEl.addEventListener('focus', function() {
+            if (this.innerText.trim() === '') {
+                this.dataset.placeholder = '';
+            }
+        });
+    }
+</script>
+
+<style>
+    #editor[contenteditable=true]:empty:before {
+        content: attr(data-placeholder);
+        color: #9ca3af;
+        pointer-events: none;
+    }
+</style>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

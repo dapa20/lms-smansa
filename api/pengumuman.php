@@ -11,7 +11,7 @@ requireAuth(); // wajib login
 
 $kategori = $_GET['kategori'] ?? '';
 
-$sql = "SELECT p.id, p.judul, p.isi, p.kategori, p.created_at,
+$sql = "SELECT p.id, p.judul, p.kepada, p.isi, p.kategori, p.created_at,
                u.nama_lengkap AS pembuat
         FROM pengumuman p
         JOIN users u ON u.id = p.dibuat_oleh";
