@@ -2,14 +2,63 @@
 require_once __DIR__ . '/../../includes/auth.php';
 require_once __DIR__ . '/../../includes/functions.php';
 requireLogin();
+requireCsrf(); // Validasi CSRF token
 
 $user = currentUser();
+$isAdmin = isAdmin();
 $action = $_GET['action'] ?? ($_POST['action'] ?? '');
+
+/**
+ * Helper: Cek apakah user adalah guru yang mengajar kelas+mapel ini
+ */
+function isGuruPengampu(int $guruId, int $kelasId, int $mapelId): bool {
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM jadwal_mengajar WHERE guru_id = ? AND kelas_id = ? AND mapel_id = ?");
+    $stmt->execute([$guruId, $kelasId, $mapelId]);
+    return (int)$stmt->fetchColumn() > 0;
+}
+
+/**
+ * Helper: Cek apakah user boleh akses section ini (admin atau guru pengampu)
+ */
+function canAccessSection(int $sectionId, int $userId, bool $isAdmin): bool {
+    if ($isAdmin) return true;
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT ms.kelas_id, ms.mapel_id FROM materi_section ms WHERE ms.id = ?");
+    $stmt->execute([$sectionId]);
+    $section = $stmt->fetch();
+    if (!$section) return false;
+    return isGuruPengampu($userId, (int)$section['kelas_id'], (int)$section['mapel_id']);
+}
+
+/**
+ * Helper: Cek apakah user boleh akses item ini (admin atau pemilik/guru pengampu)
+ */
+function canAccessItem(int $itemId, int $userId, bool $isAdmin): bool {
+    if ($isAdmin) return true;
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT mi.diunggah_oleh, ms.kelas_id, ms.mapel_id 
+                           FROM materi_item mi 
+                           JOIN materi_section ms ON ms.id = mi.section_id 
+                           WHERE mi.id = ?");
+    $stmt->execute([$itemId]);
+    $item = $stmt->fetch();
+    if (!$item) return false;
+    // Boleh jika: pemilik item ATAU guru pengampu
+    if ((int)$item['diunggah_oleh'] === $userId) return true;
+    return isGuruPengampu($userId, (int)$item['kelas_id'], (int)$item['mapel_id']);
+}
 
 if ($action === 'add_section') {
     $kelasId = (int)($_POST['kelas_id'] ?? 0);
     $mapelId = (int)($_POST['mapel_id'] ?? 0);
     $judul   = trim($_POST['judul'] ?? 'New section');
+
+    // Validasi: hanya admin atau guru pengampu yang boleh tambah section
+    if (!$isAdmin && !isGuruPengampu($user['id'], $kelasId, $mapelId)) {
+        setFlash('error', 'Anda tidak memiliki akses untuk kelas/mapel ini.');
+        redirect("../../pages/materi_detail.php?kelas_id=$kelasId&mapel_id=$mapelId");
+    }
 
     if ($kelasId > 0 && $mapelId > 0) {
         $stmt = $pdo->prepare("SELECT MAX(urutan) FROM materi_section WHERE kelas_id = ? AND mapel_id = ?");
@@ -29,6 +78,12 @@ elseif ($action === 'edit_section') {
     $kelasId   = (int)($_POST['kelas_id'] ?? 0);
     $mapelId   = (int)($_POST['mapel_id'] ?? 0);
 
+    // Validasi ownership
+    if (!canAccessSection($sectionId, $user['id'], $isAdmin)) {
+        setFlash('error', 'Anda tidak memiliki akses untuk mengedit section ini.');
+        redirect("../../pages/materi_detail.php?kelas_id=$kelasId&mapel_id=$mapelId");
+    }
+
     if ($sectionId > 0 && $judul !== '') {
         $upd = $pdo->prepare("UPDATE materi_section SET judul = ? WHERE id = ?");
         $upd->execute([$judul, $sectionId]);
@@ -41,6 +96,12 @@ elseif ($action === 'delete_section') {
     $sectionId = (int)($_POST['section_id'] ?? 0);
     $kelasId   = (int)($_POST['kelas_id'] ?? 0);
     $mapelId   = (int)($_POST['mapel_id'] ?? 0);
+
+    // Validasi ownership
+    if (!canAccessSection($sectionId, $user['id'], $isAdmin)) {
+        setFlash('error', 'Anda tidak memiliki akses untuk menghapus section ini.');
+        redirect("../../pages/materi_detail.php?kelas_id=$kelasId&mapel_id=$mapelId");
+    }
 
     if ($sectionId > 0) {
         $del = $pdo->prepare("DELETE FROM materi_section WHERE id = ?");
@@ -59,23 +120,66 @@ elseif ($action === 'add_item') {
     $deskripsi = trim($_POST['deskripsi'] ?? '');
     $urlLink   = trim($_POST['url_link'] ?? '');
 
+    // Validasi: hanya admin atau guru pengampu yang boleh tambah item
+    if (!$isAdmin && !canAccessSection($sectionId, $user['id'], $isAdmin)) {
+        setFlash('error', 'Anda tidak memiliki akses untuk menambah konten di section ini.');
+        redirect("../../pages/materi_detail.php?kelas_id=$kelasId&mapel_id=$mapelId");
+    }
+
     $namaFile = null;
     $namaFileAsli = null;
     $ukuranFile = 0;
 
-    // Handle File Upload
+    // Handle File Upload dengan validasi keamanan
     if (!empty($_FILES['file_upload']['name'])) {
         $file = $_FILES['file_upload'];
         if ($file['error'] === UPLOAD_ERR_OK) {
             $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+            
+            // Validasi extension yang diperbolehkan
+            $allowedExt = ['pdf', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx', 'jpg', 'jpeg', 'png', 'gif', 'mp4', 'mp3', 'zip', 'rar'];
+            if (!in_array($ext, $allowedExt)) {
+                setFlash('error', 'Tipe file tidak diperbolehkan. Extension yang diizinkan: ' . implode(', ', $allowedExt));
+                redirect("../../pages/materi_detail.php?kelas_id=$kelasId&mapel_id=$mapelId");
+            }
+            
+            // Validasi MIME type
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+            $mimeType = finfo_file($finfo, $file['tmp_name']);
+            finfo_close($finfo);
+            
+            $allowedMime = [
+                'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'image/jpeg', 'image/png', 'image/gif', 'video/mp4', 'audio/mpeg', 'application/zip', 'application/x-rar'
+            ];
+            
+            if (!in_array($mimeType, $allowedMime)) {
+                setFlash('error', 'Tipe file tidak valid.');
+                redirect("../../pages/materi_detail.php?kelas_id=$kelasId&mapel_id=$mapelId");
+            }
+            
+            // Validasi ukuran file (max 50MB)
+            $maxSize = 50 * 1024 * 1024; // 50MB
+            if ($file['size'] > $maxSize) {
+                setFlash('error', 'Ukuran file terlalu besar. Maksimal 50MB.');
+                redirect("../../pages/materi_detail.php?kelas_id=$kelasId&mapel_id=$mapelId");
+            }
+            
             $namaFileAsli = $file['name'];
             $ukuranFile = $file['size'];
-            $namaFile = 'materi_' . time() . '_' . rand(1000, 9999) . '.' . $ext;
+            // Generate nama file random untuk keamanan
+            $namaFile = bin2hex(random_bytes(16)) . '.' . $ext;
             $uploadDir = __DIR__ . '/../../uploads/materi/';
             if (!is_dir($uploadDir)) {
-                mkdir($uploadDir, 0777, true);
+                mkdir($uploadDir, 0755, true);
             }
-            move_uploaded_file($file['tmp_name'], $uploadDir . $namaFile);
+            
+            if (!move_uploaded_file($file['tmp_name'], $uploadDir . $namaFile)) {
+                setFlash('error', 'Gagal mengupload file.');
+                redirect("../../pages/materi_detail.php?kelas_id=$kelasId&mapel_id=$mapelId");
+            }
         }
     }
 
@@ -93,6 +197,12 @@ elseif ($action === 'delete_item') {
     $kelasId = (int)($_POST['kelas_id'] ?? 0);
     $mapelId = (int)($_POST['mapel_id'] ?? 0);
 
+    // Validasi ownership
+    if (!canAccessItem($itemId, $user['id'], $isAdmin)) {
+        setFlash('error', 'Anda tidak memiliki akses untuk menghapus item ini.');
+        redirect("../../pages/materi_detail.php?kelas_id=$kelasId&mapel_id=$mapelId");
+    }
+
     if ($itemId > 0) {
         $del = $pdo->prepare("DELETE FROM materi_item WHERE id = ?");
         $del->execute([$itemId]);
@@ -106,6 +216,12 @@ elseif ($action === 'add_reply') {
     $kelasId = (int)($_POST['kelas_id'] ?? 0);
     $mapelId = (int)($_POST['mapel_id'] ?? 0);
     $pesan   = trim($_POST['pesan'] ?? '');
+
+    // Validasi: user harus bisa akses item untuk bisa reply
+    if (!$isAdmin && !canAccessItem($itemId, $user['id'], $isAdmin)) {
+        setFlash('error', 'Anda tidak memiliki akses untuk membalas diskusi ini.');
+        redirect("../../pages/materi_detail.php?kelas_id=$kelasId&mapel_id=$mapelId");
+    }
 
     if ($itemId > 0 && $pesan !== '') {
         $ins = $pdo->prepare("INSERT INTO materi_diskusi_balasan (item_id, user_id, pesan) VALUES (?, ?, ?)");

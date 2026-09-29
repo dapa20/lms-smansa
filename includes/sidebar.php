@@ -90,11 +90,11 @@ if (!empty($logos)) {
                     </div>
                     <span id="icon-dropdownWaliKelas" class="material-symbols-outlined text-[20px] transition-transform duration-200">keyboard_arrow_down</span>
                 </button>
-                <div id="dropdownWaliKelas" class="hidden pl-4 pt-1 space-y-0.5">
+                <div id="dropdownWaliKelas" class="<?= ($currentPage === 'absen_qr') ? '' : 'hidden' ?> pl-4 pt-1 space-y-0.5">
                     <a href="<?= APP_URL ?>/pages/kelas_jadwal.php" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:text-emerald-600 hover:bg-gray-50 rounded-md transition-colors text-[13px]">
                         <span class="material-symbols-outlined text-[18px]">calendar_month</span> Jadwal Kelas Saya
                     </a>
-                    <a href="<?= APP_URL ?>/pages/data_siswa.php?tab=absen_qr" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:text-emerald-600 hover:bg-gray-50 rounded-md transition-colors text-[13px]">
+                    <a href="<?= APP_URL ?>/pages/absen_qr.php" class="flex items-center gap-3 px-3 py-2 <?= ($currentPage === 'absen_qr') ? 'text-emerald-700 bg-emerald-50 font-bold' : 'text-gray-600 hover:text-emerald-600 hover:bg-gray-50' ?> rounded-md transition-colors text-[13px]">
                         <span class="material-symbols-outlined text-[18px]">qr_code_2</span> Absen QR Code
                     </a>
                     <a href="<?= APP_URL ?>/pages/data_siswa.php" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:text-emerald-600 hover:bg-gray-50 rounded-md transition-colors text-[13px]">
@@ -128,11 +128,11 @@ if (!empty($logos)) {
                     </div>
                     <span id="icon-dropdownBelajarMengajar" class="material-symbols-outlined text-[20px] transition-transform duration-200">keyboard_arrow_down</span>
                 </button>
-                <div id="dropdownBelajarMengajar" class="hidden pl-4 pt-1 space-y-0.5">
+                <div id="dropdownBelajarMengajar" class="<?= ($currentPage === 'kinerja_harian') ? '' : 'hidden' ?> pl-4 pt-1 space-y-0.5">
                     <a href="<?= APP_URL ?>/pages/kelas_jadwal.php?tab=jurnal" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:text-emerald-600 hover:bg-gray-50 rounded-md transition-colors text-[13px]">
                         <span class="material-symbols-outlined text-[18px]">auto_stories</span> Jurnal
                     </a>
-                    <a href="<?= APP_URL ?>/pages/rekap_nilai.php?tab=laporan" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:text-emerald-600 hover:bg-gray-50 rounded-md transition-colors text-[13px]">
+                    <a href="<?= APP_URL ?>/pages/kinerja_harian.php" class="flex items-center gap-3 px-3 py-2 <?= ($currentPage === 'kinerja_harian') ? 'text-emerald-700 bg-emerald-50 font-bold' : 'text-gray-600 hover:text-emerald-600 hover:bg-gray-50' ?> rounded-md transition-colors text-[13px]">
                         <span class="material-symbols-outlined text-[18px]">description</span> Laporan Kinerja Harian
                     </a>
                     <a href="<?= APP_URL ?>/pages/kelas_jadwal.php" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:text-emerald-600 hover:bg-gray-50 rounded-md transition-colors text-[13px]">

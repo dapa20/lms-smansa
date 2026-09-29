@@ -152,3 +152,194 @@ function ikonTipeFile(string $tipe): array
         default => ['insert_drive_file', 'bg-outline text-white', 'text-outline/40'],
     };
 }
+
+/**
+ * =====================================================================
+ * XSS PROTECTION - HTML SANITIZATION
+ * =====================================================================
+ */
+
+/** 
+ * Sanitasi HTML konten dari rich text editor.
+ * Hanya izinkan tag dan atribut yang aman.
+ */
+function sanitizeHtml(string $html): string
+{
+    // Daftar tag yang diizinkan
+    $allowedTags = [
+        'p', 'br', 'strong', 'b', 'em', 'i', 'u', 'strike', 'del',
+        'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+        'ul', 'ol', 'li',
+        'a', 'img', 'table', 'thead', 'tbody', 'tr', 'td', 'th',
+        'div', 'span', 'blockquote', 'pre', 'code',
+        'iframe' // untuk embed video
+    ];
+    
+    // Daftar atribut yang diizinkan per tag
+    $allowedAttributes = [
+        'a' => ['href', 'title', 'target'],
+        'img' => ['src', 'alt', 'width', 'height', 'class'],
+        'iframe' => ['src', 'width', 'height', 'frameborder', 'allowfullscreen', 'class'],
+        'table' => ['class', 'border', 'cellpadding', 'cellspacing'],
+        'td' => ['colspan', 'rowspan', 'class'],
+        'th' => ['colspan', 'rowspan', 'class'],
+        'div' => ['class', 'style'],
+        'span' => ['class', 'style'],
+        'p' => ['class', 'style'],
+        'h1' => ['class'], 'h2' => ['class'], 'h3' => ['class'],
+        'h4' => ['class'], 'h5' => ['class'], 'h6' => ['class'],
+        'ul' => ['class'], 'ol' => ['class'], 'li' => ['class'],
+        'blockquote' => ['class'], 'pre' => ['class'], 'code' => ['class']
+    ];
+    
+    // Konfigurasi HTMLPurifier-like manual
+    $config = \HTMLPurifier_Config::createDefault();
+    $config->set('HTML.Allowed', implode(',', array_map(function($tag) use ($allowedAttributes) {
+        if (isset($allowedAttributes[$tag])) {
+            return $tag . '[' . implode(',', $allowedAttributes[$tag]) . ']';
+        }
+        return $tag;
+    }, $allowedTags)));
+    
+    $config->set('URI.AllowedSchemes', ['http', 'https', 'mailto']);
+    $config->set('AutoFormat.RemoveEmpty', true);
+    $config->set('HTML.TargetBlank', true);
+    
+    // Jika HTMLPurifier tidak tersedia, gunakan fallback
+    if (!class_exists('HTMLPurifier')) {
+        return sanitizeHtmlFallback($html, $allowedTags, $allowedAttributes);
+    }
+    
+    $purifier = new \HTMLPurifier($config);
+    return $purifier->purify($html);
+}
+
+/** 
+ * Fallback sanitasi HTML jika HTMLPurifier tidak tersedia.
+ * Menggunakan strip_tags + regex untuk atribut.
+ */
+function sanitizeHtmlFallback(string $html, array $allowedTags, array $allowedAttributes): string
+{
+    // Step 1: Hapus tag yang tidak diizinkan
+    $allowedTagsStr = '<' . implode('><', $allowedTags) . '>';
+    $html = strip_tags($html, $allowedTagsStr);
+    
+    // Step 2: Bersihkan atribut berbahaya dari setiap tag
+    $html = preg_replace_callback(
+        '/<(\w+)([^>]*)>/i',
+        function ($matches) use ($allowedAttributes) {
+            $tag = strtolower($matches[1]);
+            $attrs = $matches[2];
+            
+            // Jika tag tidak punya atribut yang diizinkan, return tag saja
+            if (!isset($allowedAttributes[$tag])) {
+                return "<$tag>";
+            }
+            
+            // Parse dan filter atribut
+            $allowed = $allowedAttributes[$tag];
+            $cleanAttrs = '';
+            
+            preg_match_all('/(\w+)=(["\'])(.*?)\2/i', $attrs, $attrMatches, PREG_SET_ORDER);
+            foreach ($attrMatches as $attr) {
+                $attrName = strtolower($attr[1]);
+                $attrValue = $attr[3];
+                
+                if (in_array($attrName, $allowed)) {
+                    // Sanitasi value atribut
+                    if ($attrName === 'href') {
+                        // Hanya izinkan http, https, mailto
+                        if (!preg_match('/^(https?:|mailto:)/i', $attrValue)) {
+                            continue;
+                        }
+                    }
+                    if ($attrName === 'src') {
+                        // Hanya izinkan http, https untuk img/iframe
+                        if (!preg_match('/^(https?:|\/)/i', $attrValue)) {
+                            continue;
+                        }
+                    }
+                    
+                    $cleanAttrs .= ' ' . $attrName . '="' . htmlspecialchars($attrValue, ENT_QUOTES, 'UTF-8') . '"';
+                }
+            }
+            
+            return "<$tag$cleanAttrs>";
+        },
+        $html
+    );
+    
+    // Step 3: Hapus event handler (onclick, onload, dll)
+    $html = preg_replace('/\s*on\w+\s*=\s*["\'][^"\']*["\']/i', '', $html);
+    
+    // Step 4: Hapus javascript: protocol
+    $html = preg_replace('/javascript:/i', '', $html);
+    
+    return $html;
+}
+
+/** 
+ * Sanitasi teks biasa (non-HTML) untuk output.
+ * Lebih ketat dari h(), cocok untuk plain text.
+ */
+function e(string $text): string
+{
+    return htmlspecialchars($text ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8');
+}
+
+/**
+ * =====================================================================
+ * AUDIT LOG
+ * =====================================================================
+ */
+
+/**
+ * Mencatat aktivitas penting ke dalam tabel audit_logs
+ */
+function logAktivitas(string $action, string $description): void
+{
+    global $pdo;
+    
+    // Pastikan $pdo tersedia
+    if (!isset($pdo)) {
+        return;
+    }
+    
+    $userId = $_SESSION['user_id'] ?? null;
+    $ip = $_SERVER['REMOTE_ADDR'] ?? '';
+    
+    try {
+        $stmt = $pdo->prepare('INSERT INTO audit_logs (user_id, action, description, ip_address, created_at) VALUES (?, ?, ?, ?, NOW())');
+        $stmt->execute([$userId, $action, $description, $ip]);
+    } catch (\Throwable $th) {
+        // Abaikan jika terjadi error pencatatan log agar tidak mengganggu flow utama
+    }
+}
+
+/**
+ * =====================================================================
+ * UI HELPERS
+ * =====================================================================
+ */
+
+/**
+ * Menampilkan halaman "Coming Soon" untuk fitur yang belum dibuat.
+ */
+function renderComingSoon(string $namaFitur): void
+{
+    echo '
+    <div class="flex flex-col items-center justify-center min-h-[60vh] py-12 px-4 text-center">
+        <div class="w-32 h-32 mb-6 bg-blue-50 rounded-full flex items-center justify-center">
+            <span class="material-symbols-outlined text-blue-500 text-[64px]">construction</span>
+        </div>
+        <h2 class="text-2xl font-bold text-gray-800 mb-3">Fitur Sedang Dibangun</h2>
+        <p class="text-gray-500 max-w-md mx-auto mb-8 leading-relaxed">
+            Sabar ya! Halaman <strong>' . h($namaFitur) . '</strong> saat ini masih dalam tahap pengembangan oleh tim IT kami. Kami akan segera merilisnya.
+        </p>
+        <button onclick="history.back()" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-6 rounded-lg transition-colors flex items-center gap-2 shadow-sm">
+            <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+            Kembali
+        </button>
+    </div>
+    ';
+}

@@ -8,6 +8,22 @@ $semester    = $_GET['semester'] ?? 'Ganjil';
 $tahunAjaran = $_GET['tahun_ajaran'] ?? '2024/2025';
 $format      = $_GET['format'] ?? 'excel'; // 'excel' (Formatted .xls) atau 'csv' (Semicolon .csv)
 
+$currentTab = $_GET['tab'] ?? '';
+if ($currentTab === 'arsip') {
+    $pageTitle = 'Arsip Rapor';
+    $currentPage = 'arsip';
+    $user = currentUser();
+    $isAdmin = isAdmin();
+    require_once __DIR__ . '/../includes/head.php';
+    require_once __DIR__ . '/../includes/sidebar.php';
+    require_once __DIR__ . '/../includes/topbar.php';
+    echo '<main class="pt-16 md:ml-[280px] min-h-screen bg-background"><div class="p-md md:p-lg max-w-[1440px] mx-auto">';
+    renderComingSoon('Arsip Rapor');
+    echo '</div></main>';
+    require_once __DIR__ . '/../includes/footer.php';
+    exit;
+}
+
 if ($kelasId === 0 || $mapelId === 0) {
     redirect('rekap_nilai.php');
 }

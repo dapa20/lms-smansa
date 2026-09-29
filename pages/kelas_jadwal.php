@@ -361,7 +361,20 @@ require_once __DIR__ . '/../includes/topbar.php';
 
 <main class="pt-16 md:ml-[280px] min-h-screen bg-background">
     <div class="p-md md:p-lg max-w-container-max mx-auto w-full">
-        <?php renderFlash(); ?>
+        <?php 
+        renderFlash(); 
+        
+        $currentTab = $_GET['tab'] ?? '';
+        $unimplementedTabs = [
+            'jurnal' => 'Jurnal Kelas'
+        ];
+        
+        if (array_key_exists($currentTab, $unimplementedTabs)) {
+            renderComingSoon($unimplementedTabs[$currentTab]);
+            echo '</div></main></body></html>';
+            exit;
+        }
+        ?>
 
         <!-- Header -->
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-lg gap-4">

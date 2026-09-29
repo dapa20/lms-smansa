@@ -135,6 +135,7 @@ $warnaJenis  = ['tugas' => 'bg-primary/10 text-primary', 'kuis' => 'bg-secondary
                             <span class="text-label-md font-label-md px-2 py-1 rounded <?= $t['status'] === 'aktif' ? 'bg-secondary-container/20 text-secondary' : 'bg-surface-container text-text-muted' ?>"><?= $t['status'] === 'aktif' ? 'Aktif' : 'Selesai' ?></span>
                         </div>
                         <form action="../actions/tugas/tugas_hapus.php" method="post" onsubmit="return confirm('Hapus tugas ini beserta semua data pengumpulannya?');">
+                            <?php csrfField(); ?>
                             <input type="hidden" name="id" value="<?= (int)$t['id'] ?>">
                             <button type="submit" class="text-text-muted hover:text-error p-1" title="Hapus"><span class="material-symbols-outlined text-[20px]">delete</span></button>
                         </form>
@@ -174,6 +175,7 @@ $warnaJenis  = ['tugas' => 'bg-primary/10 text-primary', 'kuis' => 'bg-secondary
     <div class="absolute inset-0 bg-black/50" onclick="window.location.href='tugas_ujian.php'"></div>
     <div class="relative bg-surface-white rounded-xl shadow-[0px_8px_32px_rgba(0,0,0,0.12)] w-full max-w-lg max-h-[90vh] overflow-y-auto">
         <form action="../actions/tugas/tugas_simpan.php" method="post" class="p-lg">
+            <?php csrfField(); ?>
             <div class="flex items-center justify-between mb-lg border-b border-outline-variant pb-4">
                 <h3 class="text-headline-sm font-headline-sm text-text-main">Buat Tugas / Ujian Baru</h3>
                 <a href="tugas_ujian.php" class="text-text-muted hover:text-error"><span class="material-symbols-outlined">close</span></a>

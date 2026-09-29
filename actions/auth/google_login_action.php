@@ -105,6 +105,9 @@ $_SESSION['user_id']   = $user['id'];
 $_SESSION['user_role'] = $user['role'];
 $_SESSION['user_name'] = $user['nama_lengkap'];
 
+require_once __DIR__ . '/../../includes/functions.php';
+logAktivitas('LOGIN', 'User berhasil login menggunakan Akun Google.');
+
 if ($isJsonRequest) {
     header('Content-Type: application/json');
     echo json_encode(['success' => true, 'redirect' => 'index.php']);

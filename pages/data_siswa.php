@@ -7,6 +7,11 @@ $currentPage = 'siswa';
 $user        = currentUser();
 $isAdmin     = isAdmin();
 
+// Jika parameter tab absen_qr diakses, redirect ke halaman baru
+if (($_GET['tab'] ?? '') === 'absen_qr') {
+    redirect('absen_qr.php');
+}
+
 // Tab "Data Guru" hanya untuk admin. Guru dipaksa selalu ke tab "siswa".
 $tab = ($isAdmin && ($_GET['tab'] ?? '') === 'guru') ? 'guru' : 'siswa';
 
@@ -30,7 +35,26 @@ require_once __DIR__ . '/../includes/topbar.php';
 ?>
 <main class="pt-16 md:ml-[280px] min-h-screen bg-background">
     <div class="p-md md:p-lg max-w-[1440px] mx-auto">
-        <?php renderFlash(); ?>
+        <?php 
+        renderFlash(); 
+        
+        $currentTab = $_GET['tab'] ?? '';
+        $unimplementedTabs = [
+            'struktur' => 'Struktur',
+            'catatan' => 'Catatan',
+            'poin' => 'Poin Kelas',
+            'kehadiran' => 'Kehadiran Harian',
+            'kehadiran_bulanan' => 'Kehadiran Bulanan',
+            'kenaikan' => 'Kenaikan'
+        ];
+        
+        if (array_key_exists($currentTab, $unimplementedTabs)) {
+            renderComingSoon($unimplementedTabs[$currentTab]);
+            echo '</div></main>';
+            require_once __DIR__ . '/../includes/footer.php';
+            exit;
+        }
+        ?>
 
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-md gap-4">
             <div>

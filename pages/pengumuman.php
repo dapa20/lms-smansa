@@ -42,6 +42,7 @@ require_once __DIR__ . '/../includes/topbar.php';
             </div>
 
             <form action="../actions/pengumuman/pengumuman_simpan.php" method="POST" id="formPengumuman" class="p-6 space-y-4">
+                <?php csrfField(); ?>
                 <?php if ($editPengumuman): ?>
                     <input type="hidden" name="id" value="<?= (int)$editPengumuman['id'] ?>">
                     <input type="hidden" name="redirect_to" value="../pages/pengumuman.php">

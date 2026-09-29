@@ -7,6 +7,10 @@ $currentPage = 'nilai';
 $user        = currentUser();
 $isAdmin     = isAdmin();
 
+if (($_GET['tab'] ?? '') === 'laporan') {
+    redirect('kinerja_harian.php');
+}
+
 if ($isAdmin) {
     $daftarKelas = $pdo->query('SELECT * FROM kelas ORDER BY tingkat, nama_kelas')->fetchAll();
     $daftarMapel = $pdo->query('SELECT * FROM mata_pelajaran ORDER BY nama_mapel')->fetchAll();
@@ -123,7 +127,26 @@ require_once __DIR__ . '/../includes/topbar.php';
 ?>
 <main class="pt-16 md:ml-[280px] min-h-screen bg-background">
     <div class="p-md md:p-lg max-w-[1440px] mx-auto">
-        <?php renderFlash(); ?>
+        <?php 
+        renderFlash(); 
+        
+        $currentTab = $_GET['tab'] ?? '';
+        $unimplementedTabs = [
+            'analisis' => 'Analisis Soal',
+            'kkm' => 'KKM dan Bobot',
+            'indikator' => 'Indikator Nilai',
+            'spiritual' => 'Sikap Spiritual',
+            'sosial' => 'Sikap Sosial',
+            'prestasi' => 'Prestasi'
+        ];
+        
+        if (array_key_exists($currentTab, $unimplementedTabs)) {
+            renderComingSoon($unimplementedTabs[$currentTab]);
+            echo '</div></main>';
+            require_once __DIR__ . '/../includes/footer.php';
+            exit;
+        }
+        ?>
         <?php if (!empty($_GET['error'])): ?>
             <div class="mb-6 p-4 rounded-xl bg-error-container text-on-error-container border border-error/20 flex items-start gap-3 shadow-xs">
                 <span class="material-symbols-outlined text-error flex-shrink-0 mt-0.5">error</span>

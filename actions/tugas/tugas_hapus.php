@@ -1,6 +1,7 @@
 ﻿<?php
 require_once __DIR__ . '/../../includes/auth.php';
 requireLogin();
+requireCsrf(); // Validasi CSRF token
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     redirect('../../pages/tugas_ujian.php');

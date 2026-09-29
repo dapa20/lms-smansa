@@ -1,6 +1,7 @@
 ﻿<?php
 require_once __DIR__ . '/../../includes/auth.php';
 requireLogin();
+requireRole('admin'); // Hanya admin yang boleh menghapus data siswa
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     redirect('../../pages/data_siswa.php');
