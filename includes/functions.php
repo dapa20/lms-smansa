@@ -132,11 +132,13 @@ function renderFlash(): void
         return;
     }
     $sukses = $flash['tipe'] === 'sukses';
-    $bgClass = $sukses ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-error-container border-error/30 text-error';
+    $bgClass = $sukses ? 'bg-emerald-50 border-emerald-200 text-emerald-800' : 'bg-red-50 border-red-200 text-red-800';
     $icon = $sukses ? 'check_circle' : 'error';
-    echo '<div class="flex items-center gap-3 border rounded-lg px-4 py-3 mb-lg ' . $bgClass . '">'
-        . '<span class="material-symbols-outlined">' . $icon . '</span>'
-        . '<span class="text-body-sm font-body-sm flex-1">' . h($flash['pesan']) . '</span>'
+    $iconColor = $sukses ? 'text-emerald-500' : 'text-red-500';
+    
+    echo '<div class="flex items-center gap-3 border rounded-xl px-5 py-4 mb-6 shadow-sm ' . $bgClass . '">'
+        . '<span class="material-symbols-outlined ' . $iconColor . ' text-[24px]">' . $icon . '</span>'
+        . '<span class="text-sm font-semibold flex-1">' . h($flash['pesan']) . '</span>'
         . '</div>';
 }
 
@@ -328,15 +330,15 @@ function logAktivitas(string $action, string $description): void
 function renderComingSoon(string $namaFitur): void
 {
     echo '
-    <div class="flex flex-col items-center justify-center min-h-[60vh] py-12 px-4 text-center">
-        <div class="w-32 h-32 mb-6 bg-blue-50 rounded-full flex items-center justify-center">
-            <span class="material-symbols-outlined text-blue-500 text-[64px]">construction</span>
+    <div class="flex flex-col items-center justify-center min-h-[60vh] py-16 px-4 text-center">
+        <div class="w-32 h-32 mb-8 bg-gradient-to-tr from-slate-100 to-slate-200 rounded-full flex items-center justify-center shadow-inner border border-white">
+            <span class="material-symbols-outlined text-slate-400 text-[64px]">construction</span>
         </div>
-        <h2 class="text-2xl font-bold text-gray-800 mb-3">Fitur Sedang Dibangun</h2>
-        <p class="text-gray-500 max-w-md mx-auto mb-8 leading-relaxed">
-            Sabar ya! Halaman <strong>' . h($namaFitur) . '</strong> saat ini masih dalam tahap pengembangan oleh tim IT kami. Kami akan segera merilisnya.
+        <h2 class="text-3xl font-bold text-slate-800 mb-4 tracking-tight">Fitur Sedang Dibangun</h2>
+        <p class="text-slate-500 max-w-md mx-auto mb-10 leading-relaxed text-sm font-medium">
+            Sabar ya! Halaman <strong class="text-slate-700">' . h($namaFitur) . '</strong> saat ini masih dalam tahap pengembangan oleh tim IT kami. Kami akan segera merilisnya.
         </p>
-        <button onclick="history.back()" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-6 rounded-lg transition-colors flex items-center gap-2 shadow-sm">
+        <button onclick="history.back()" class="bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-sm font-bold px-6 py-3 rounded-xl flex items-center gap-2 transition-all shadow-sm hover:shadow-md">
             <span class="material-symbols-outlined text-[20px]">arrow_back</span>
             Kembali
         </button>

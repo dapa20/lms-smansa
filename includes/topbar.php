@@ -14,19 +14,22 @@ try {
     $jumlahNotifikasi = 0;
 }
 ?>
-<header class="fixed top-0 right-0 left-0 md:left-[280px] h-14 bg-surface-white flex items-center justify-between px-4 md:px-6 z-30 shadow-xs border-b border-outline-variant/50">
-    <div class="flex items-center gap-3 min-w-0">
-        <button onclick="toggleSidebar()" class="text-text-muted hover:text-primary p-1 -ml-1">
-            <span class="material-symbols-outlined">menu</span>
+<header class="fixed top-0 right-0 left-0 md:left-[280px] h-16 bg-white/80 backdrop-blur-md flex items-center justify-between px-4 md:px-8 z-30 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.1)] border-b border-slate-200/60 transition-all">
+    <div class="flex items-center gap-4 min-w-0">
+        <button onclick="toggleSidebar()" class="text-slate-500 hover:text-blue-600 hover:bg-blue-50 p-2 rounded-lg transition-colors -ml-2">
+            <span class="material-symbols-outlined text-[24px]">menu</span>
         </button>
-        <span class="text-body-md font-medium text-text-main hidden sm:inline-block">
+        <span class="text-sm font-semibold text-slate-600 hidden sm:inline-block bg-slate-100/80 px-3 py-1.5 rounded-lg border border-slate-200">
             TP: 2026/2027 Smt: I (satu)
         </span>
     </div>
-    <div class="flex items-center gap-4 flex-shrink-0">
-        <!-- Live Real-time Clock (Matches reference screenshot 22:50:37) -->
-        <div id="liveClock" class="font-mono text-body-lg font-bold text-gray-800 tracking-wider">
-            <?= date('H:i:s') ?>
+    <div class="flex items-center gap-5 flex-shrink-0">
+        <!-- Live Real-time Clock -->
+        <div class="bg-blue-50 border border-blue-100 px-4 py-1.5 rounded-lg hidden sm:flex items-center gap-2">
+            <span class="material-symbols-outlined text-blue-500 text-[18px]">schedule</span>
+            <div id="liveClock" class="font-mono text-sm font-bold text-blue-700 tracking-wider">
+                <?= date('H:i:s') ?>
+            </div>
         </div>
         <script>
             function updateClock() {
@@ -40,16 +43,20 @@ try {
             setInterval(updateClock, 1000);
         </script>
         
-        <div class="hidden lg:block text-right">
-            <p class="text-label-lg font-label-lg text-text-main truncate max-w-[200px]"><?= h($user['nama_lengkap'] ?? '') ?></p>
-            <p class="text-label-md font-label-md text-text-muted"><?= h(ucfirst($user['role'] ?? '')) ?></p>
+        <div class="h-8 w-px bg-slate-200 hidden md:block"></div>
+
+        <div class="flex items-center gap-3">
+            <div class="hidden lg:block text-right">
+                <p class="text-sm font-bold text-slate-800 truncate max-w-[200px]"><?= h($user['nama_lengkap'] ?? '') ?></p>
+                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide"><?= h(ucfirst($user['role'] ?? '')) ?></p>
+            </div>
+            <a href="<?= APP_URL ?>/pages/pengaturan.php" class="relative w-10 h-10 rounded-full overflow-hidden border-2 border-white shadow-md flex items-center justify-center bg-gradient-to-tr from-blue-500 to-indigo-500 flex-shrink-0 hover:scale-105 transition-transform" title="Pengaturan Akun">
+                <?php if (!empty($user['foto'])): ?>
+                    <img class="w-full h-full object-cover" src="<?= APP_URL ?>/uploads/avatar/<?= h($user['foto']) ?>" alt="Foto profil">
+                <?php else: ?>
+                    <span class="text-white text-sm font-bold"><?= h(inisialNama($user['nama_lengkap'] ?? '?')) ?></span>
+                <?php endif; ?>
+            </a>
         </div>
-        <a href="<?= APP_URL ?>/pages/pengaturan.php" class="w-9 h-9 rounded-full overflow-hidden border border-outline-variant flex items-center justify-center bg-primary-container flex-shrink-0" title="Pengaturan Akun">
-            <?php if (!empty($user['foto'])): ?>
-                <img class="w-full h-full object-cover" src="<?= APP_URL ?>/uploads/avatar/<?= h($user['foto']) ?>" alt="Foto profil">
-            <?php else: ?>
-                <span class="text-on-primary text-label-md font-bold"><?= h(inisialNama($user['nama_lengkap'] ?? '?')) ?></span>
-            <?php endif; ?>
-        </a>
     </div>
 </header>

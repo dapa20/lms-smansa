@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 require_once __DIR__ . '/../../includes/auth.php';
 requireLogin();
 
@@ -30,4 +30,4 @@ foreach ($siswaIds as $i => $siswaId) {
 }
 
 setFlash('sukses', "Nilai berhasil disimpan untuk $jumlahDisimpan siswa.");
-redirect('../../pages/tugas_ujian.php');
+redirect("../../pages/tugas_penilaian.php?id=" . $tugasId);

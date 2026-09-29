@@ -61,179 +61,194 @@ require_once __DIR__ . '/includes/head.php';
 require_once __DIR__ . '/includes/sidebar.php';
 require_once __DIR__ . '/includes/topbar.php';
 ?>
-<main class="pt-16 md:ml-[280px] min-h-screen bg-[#f3f4f6]">
-    <div class="p-4 md:p-6 max-w-[1440px] mx-auto space-y-6">
+<main class="pt-16 md:ml-[280px] min-h-screen bg-slate-50/40">
+    <div class="p-6 md:p-8 max-w-[1440px] mx-auto space-y-8">
         <?php renderFlash(); ?>
 
         <!-- Shortcut Admin ke halaman Pengumuman -->
         <?php if ($isAdmin): ?>
-            <div class="bg-blue-50 border border-blue-200/80 rounded-xl px-6 py-4 flex items-center justify-between gap-4">
-                <div class="flex items-center gap-3">
-                    <span class="material-symbols-outlined text-blue-600 text-[24px]">campaign</span>
+            <div class="bg-gradient-to-r from-blue-50 to-indigo-50/30 border border-blue-100/50 rounded-2xl px-6 py-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-5 shadow-sm">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-blue-100/50 flex items-center justify-center flex-shrink-0 border border-blue-200/50">
+                        <span class="material-symbols-outlined text-blue-600 text-[26px]">campaign</span>
+                    </div>
                     <div>
-                        <p class="font-bold text-blue-800 text-sm">Kelola Pengumuman Sekolah</p>
-                        <p class="text-xs text-blue-600/80">Tulis, edit, dan hapus pengumuman untuk siswa &amp; guru.</p>
+                        <p class="font-bold text-slate-800 text-base mb-0.5">Kelola Pengumuman Sekolah</p>
+                        <p class="text-sm text-slate-500 font-medium">Tulis, edit, dan hapus pengumuman untuk siswa &amp; guru.</p>
                     </div>
                 </div>
-                <a href="pages/pengumuman.php" class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-lg flex items-center gap-2 transition-colors flex-shrink-0">
-                    <span class="material-symbols-outlined text-[17px]">open_in_new</span> Buka Halaman Pengumuman
+                <a href="pages/pengumuman.php" class="bg-white hover:bg-slate-50 border border-slate-200 text-blue-600 text-sm font-bold px-5 py-2.5 rounded-xl flex items-center gap-2 transition-all shadow-sm hover:shadow-md flex-shrink-0">
+                    Buka Halaman <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
                 </a>
             </div>
         <?php endif; ?>
+
         <!-- Judul Halaman Profil Pengguna -->
-        <div class="border-b border-outline-variant/60 pb-3">
-            <h2 class="text-headline-md font-headline-md font-bold text-text-main">
-                Profil Pengguna - <?= strtoupper(h($user['nama_lengkap'])) ?>
-            </h2>
+        <div class="flex items-end justify-between pb-2">
+            <div>
+                <p class="text-sm font-semibold text-blue-600 mb-1 tracking-wide uppercase">Dashboard</p>
+                <h2 class="text-3xl font-bold text-slate-800 tracking-tight">
+                    Selamat datang, <?= h(explode(' ', $user['nama_lengkap'])[0]) ?>!
+                </h2>
+            </div>
         </div>
 
         <!-- Layout 2 Kartu Profil -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-lg items-start">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             
             <!-- Kartu Kiri: Foto, Nama, NIP, Guru Mapel -->
-            <div class="lg:col-span-5 bg-white rounded-2xl p-xl shadow-sm border border-outline-variant/70 text-center flex flex-col items-center">
-                <div class="w-36 h-36 rounded-full overflow-hidden border-4 border-red-500/80 shadow-md mb-4 flex-shrink-0 bg-surface-container flex items-center justify-center">
-                    <?php if (!empty($user['foto'])): ?>
-                        <img src="<?= APP_URL ?>/uploads/avatar/<?= h($user['foto']) ?>" alt="<?= h($user['nama_lengkap']) ?>" class="w-full h-full object-cover">
-                    <?php else: ?>
-                        <span class="material-symbols-outlined text-[80px] text-text-muted">account_circle</span>
-                    <?php endif; ?>
+            <div class="lg:col-span-4 bg-white/80 backdrop-blur-md rounded-2xl p-8 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] border border-slate-200/60 text-center flex flex-col items-center">
+                <div class="relative w-32 h-32 mb-5">
+                    <div class="absolute inset-0 bg-gradient-to-tr from-blue-500 to-indigo-500 rounded-full blur-md opacity-40"></div>
+                    <div class="relative w-full h-full rounded-full overflow-hidden border-4 border-white shadow-sm bg-slate-100 flex items-center justify-center">
+                        <?php if (!empty($user['foto'])): ?>
+                            <img src="<?= APP_URL ?>/uploads/avatar/<?= h($user['foto']) ?>" alt="<?= h($user['nama_lengkap']) ?>" class="w-full h-full object-cover">
+                        <?php else: ?>
+                            <span class="material-symbols-outlined text-[64px] text-slate-300">account_circle</span>
+                        <?php endif; ?>
+                    </div>
                 </div>
 
-                <h3 class="font-title-lg text-title-lg font-bold text-text-main mb-6 uppercase tracking-wide">
+                <h3 class="text-xl font-bold text-slate-800 mb-6 tracking-tight">
                     <?= h($user['nama_lengkap']) ?>
                 </h3>
 
-                <div class="w-full space-y-4 text-left border-t border-outline-variant/40 pt-4">
+                <div class="w-full space-y-4 text-left border-t border-slate-100 pt-5">
                     <div>
-                        <div class="flex items-center gap-1.5 text-amber-600 font-label-md font-bold mb-0.5">
-                            <span class="material-symbols-outlined text-[18px]">sell</span> Nama Pengguna
+                        <div class="flex items-center gap-1.5 text-slate-500 text-xs font-semibold uppercase tracking-wider mb-1">
+                            <span class="material-symbols-outlined text-[16px]">sell</span> Nama Pengguna
                         </div>
-                        <p class="font-body-md text-body-md text-text-main pl-6 font-medium"><?= h($user['nama_lengkap']) ?></p>
+                        <p class="text-slate-800 text-sm font-medium pl-5"><?= h($user['nama_lengkap']) ?></p>
                     </div>
 
                     <div>
-                        <div class="flex items-center gap-1.5 text-amber-600 font-label-md font-bold mb-0.5">
-                            <span class="material-symbols-outlined text-[18px]">badge</span> NIP
+                        <div class="flex items-center gap-1.5 text-slate-500 text-xs font-semibold uppercase tracking-wider mb-1">
+                            <span class="material-symbols-outlined text-[16px]">badge</span> NIP
                         </div>
-                        <p class="font-body-md text-body-md text-text-main pl-6 font-semibold"><?= h($user['nip'] ?: '-') ?></p>
+                        <p class="text-slate-800 text-sm font-medium pl-5"><?= h($user['nip'] ?: '-') ?></p>
                     </div>
 
                     <div>
-                        <div class="flex items-center gap-1.5 text-rose-600 font-label-md font-bold mb-0.5">
-                            <span class="material-symbols-outlined text-[18px]">menu_book</span> Guru Mapel
+                        <div class="flex items-center gap-1.5 text-slate-500 text-xs font-semibold uppercase tracking-wider mb-1">
+                            <span class="material-symbols-outlined text-[16px]">menu_book</span> Guru Mapel
                         </div>
-                        <p class="font-body-md text-body-md text-text-main pl-6 font-medium"><?= h($user['mapel_keahlian'] ?: ($mapelDiajar ?: 'Guru SMA Negeri 1 Bumiayu')) ?></p>
+                        <p class="text-slate-800 text-sm font-medium pl-5"><?= h($user['mapel_keahlian'] ?: ($mapelDiajar ?: 'Guru SMA Negeri 1 Bumiayu')) ?></p>
                     </div>
                 </div>
             </div>
 
             <!-- Kartu Kanan: Wali Kelas, Status, Agama, Email, No Telp & Tombol Aksi -->
-            <div class="lg:col-span-7 bg-white rounded-2xl p-xl shadow-sm border border-outline-variant/70 flex flex-col justify-between min-h-[420px]">
+            <div class="lg:col-span-8 bg-white/80 backdrop-blur-md rounded-2xl p-8 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] border border-slate-200/60 flex flex-col justify-between min-h-[400px]">
                 
-                <div class="space-y-5">
-                    <div>
-                        <div class="flex items-center gap-2 text-sky-600 font-label-lg font-bold mb-0.5">
-                            <span class="material-symbols-outlined text-[20px]">sentiment_satisfied</span> Wali Kelas
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-slate-50/50 rounded-xl p-4 border border-slate-100">
+                        <div class="flex items-center gap-2 text-slate-500 text-xs font-semibold uppercase tracking-wider mb-1.5">
+                            <span class="material-symbols-outlined text-[18px]">sentiment_satisfied</span> Wali Kelas
                         </div>
-                        <p class="font-body-md text-body-md text-text-main pl-7 font-bold text-primary">
+                        <p class="text-blue-600 text-base font-bold">
                             <?= $isWaliKelas ? h($kelasDiwali[0]) : 'Bukan Wali Kelas' ?>
                         </p>
                     </div>
 
-                    <div>
-                        <div class="flex items-center gap-2 text-emerald-600 font-label-lg font-bold mb-0.5">
-                            <span class="material-symbols-outlined text-[20px]">school</span> Status
+                    <div class="bg-slate-50/50 rounded-xl p-4 border border-slate-100">
+                        <div class="flex items-center gap-2 text-slate-500 text-xs font-semibold uppercase tracking-wider mb-1.5">
+                            <span class="material-symbols-outlined text-[18px]">school</span> Status
                         </div>
-                        <p class="font-body-md text-body-md text-text-main pl-7 font-medium">
+                        <p class="text-slate-800 text-base font-semibold">
                             Aktif (Pegawai Portal)
                         </p>
                     </div>
 
-                    <div>
-                        <div class="flex items-center gap-2 text-sky-600 font-label-lg font-bold mb-0.5">
-                            <span class="material-symbols-outlined text-[20px]">star</span> Agama
+                    <div class="bg-slate-50/50 rounded-xl p-4 border border-slate-100">
+                        <div class="flex items-center gap-2 text-slate-500 text-xs font-semibold uppercase tracking-wider mb-1.5">
+                            <span class="material-symbols-outlined text-[18px]">star</span> Agama
                         </div>
-                        <p class="font-body-md text-body-md text-text-main pl-7 font-medium">
+                        <p class="text-slate-800 text-base font-semibold">
                             <?= h($user['agama'] ?: 'Islam') ?>
                         </p>
                     </div>
 
-                    <div>
-                        <div class="flex items-center gap-2 text-rose-600 font-label-lg font-bold mb-0.5">
-                            <span class="material-symbols-outlined text-[20px]">mail</span> Email
+                    <div class="bg-slate-50/50 rounded-xl p-4 border border-slate-100">
+                        <div class="flex items-center gap-2 text-slate-500 text-xs font-semibold uppercase tracking-wider mb-1.5">
+                            <span class="material-symbols-outlined text-[18px]">mail</span> Email
                         </div>
-                        <p class="font-body-md text-body-md text-text-main pl-7 font-medium">
+                        <p class="text-slate-800 text-base font-semibold truncate" title="<?= h($user['email']) ?>">
                             <?= h($user['email']) ?>
                         </p>
                     </div>
 
-                    <div>
-                        <div class="flex items-center gap-2 text-indigo-600 font-label-lg font-bold mb-0.5">
-                            <span class="material-symbols-outlined text-[20px]">call</span> No. Telp / WhatsApp
+                    <div class="bg-slate-50/50 rounded-xl p-4 border border-slate-100 md:col-span-2">
+                        <div class="flex items-center gap-2 text-slate-500 text-xs font-semibold uppercase tracking-wider mb-1.5">
+                            <span class="material-symbols-outlined text-[18px]">call</span> No. Telp / WhatsApp
                         </div>
-                        <p class="font-body-md text-body-md text-text-main pl-7 font-medium">
+                        <p class="text-slate-800 text-base font-semibold">
                             <?= h($user['no_telp'] ?: '0812-3456-7890') ?>
                         </p>
                     </div>
                 </div>
 
-                <div class="pt-6 mt-6 border-t border-outline-variant/40 flex flex-wrap items-center gap-3">
+                <div class="pt-6 mt-6 border-t border-slate-100 flex flex-wrap items-center gap-3">
                     <button type="button" onclick="window.location.reload()" 
-                            class="bg-amber-500 hover:bg-amber-600 text-white font-label-md text-label-md font-bold px-4 py-2.5 rounded-lg flex items-center gap-2 transition-colors shadow-sm">
-                        <span class="material-symbols-outlined text-[18px]">refresh</span> Reload Tampilan
+                            class="bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-sm font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 transition-all shadow-sm">
+                        <span class="material-symbols-outlined text-[18px]">refresh</span> Reload
                     </button>
 
                     <a href="pages/materi.php" 
-                       class="bg-emerald-600 hover:bg-emerald-700 text-white font-label-md text-label-md font-bold px-4 py-2.5 rounded-lg flex items-center gap-2 transition-colors shadow-sm">
-                        <span class="material-symbols-outlined text-[18px]">school</span> Materi Pembelajaran
+                       class="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white text-sm font-bold px-5 py-2.5 rounded-xl flex items-center gap-2 transition-all shadow-[0_4px_12px_-2px_rgba(16,185,129,0.3)] hover:-translate-y-0.5">
+                        <span class="material-symbols-outlined text-[18px]">school</span> Materi Belajar
                     </a>
 
                     <a href="pages/data_siswa.php" 
-                       class="bg-pink-600 hover:bg-pink-700 text-white font-label-md text-label-md font-bold px-4 py-2.5 rounded-lg flex items-center gap-2 transition-colors shadow-sm">
+                       class="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white text-sm font-bold px-5 py-2.5 rounded-xl flex items-center gap-2 transition-all shadow-[0_4px_12px_-2px_rgba(59,130,246,0.3)] hover:-translate-y-0.5">
                         <span class="material-symbols-outlined text-[18px]">group</span> Data Siswa &amp; Kelas
                     </a>
                 </div>
-
             </div>
         </div>
 
         <!-- Bagian Jadwal & Pengumuman Sekolah -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-lg pt-4">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 pt-2">
             
             <!-- Jadwal Mengajar Hari Ini -->
-            <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-outline-variant/70 overflow-hidden">
-                <div class="px-lg py-md border-b border-outline-variant flex justify-between items-center bg-white">
-                    <h3 class="text-title-lg font-bold text-text-main flex items-center gap-2">
-                        <span class="material-symbols-outlined text-primary">calendar_month</span> Jadwal Mengajar Hari Ini
+            <div class="lg:col-span-2 bg-white/80 backdrop-blur-md rounded-2xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] border border-slate-200/60 overflow-hidden flex flex-col">
+                <div class="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-white/50">
+                    <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-blue-600">calendar_month</span> Jadwal Mengajar Hari Ini
                     </h3>
-                    <span class="text-label-md font-label-md text-primary font-bold"><?= h($hariIni) ?>, <?= formatTanggalIndo(date('Y-m-d')) ?></span>
+                    <span class="text-sm font-semibold text-blue-600 bg-blue-50 px-3 py-1 rounded-full"><?= h($hariIni) ?>, <?= formatTanggalIndo(date('Y-m-d')) ?></span>
                 </div>
-                <div class="p-lg">
+                <div class="p-6 flex-1 bg-slate-50/30">
                     <?php if (empty($jadwalHariIni)): ?>
-                        <div class="text-center py-lg text-text-muted">
-                            <span class="material-symbols-outlined text-[40px] mb-2 block text-outline">event_available</span>
-                            Tidak ada jadwal mengajar hari ini. Selamat beristirahat!
+                        <div class="text-center py-10 text-slate-400">
+                            <span class="material-symbols-outlined text-[48px] mb-3 block text-slate-200">event_available</span>
+                            <p class="font-medium text-slate-500">Tidak ada jadwal mengajar hari ini.</p>
+                            <p class="text-sm">Selamat beristirahat!</p>
                         </div>
                     <?php else: ?>
-                        <div class="space-y-md">
+                        <div class="space-y-4">
                             <?php foreach ($jadwalHariIni as $j): ?>
                                 <?php
                                     $sudahLewat = $j['jam_selesai'] < $sekarang;
                                     $sedangBerlangsung = $j['jam_mulai'] <= $sekarang && $sekarang <= $j['jam_selesai'];
                                 ?>
-                                <div class="flex flex-col md:flex-row md:items-center justify-between p-md bg-surface-container/50 rounded-xl border border-outline-variant/60 hover:border-primary/30 transition-all gap-2">
-                                    <div>
-                                        <p class="text-label-md font-label-md text-primary font-bold"><?= substr($j['jam_mulai'], 0, 5) ?> - <?= substr($j['jam_selesai'], 0, 5) ?></p>
-                                        <h4 class="text-body-lg font-bold text-text-main"><?= h($j['nama_mapel']) ?> - <?= h($j['nama_kelas']) ?></h4>
-                                        <p class="text-body-sm text-text-muted">
-                                            <?= $j['keterangan'] ? h($j['keterangan']) . ' • ' : '' ?><?= h($j['ruang'] ?? '-') ?>
-                                        </p>
+                                <div class="group flex flex-col md:flex-row md:items-center justify-between p-5 bg-white rounded-xl border border-slate-200 hover:border-blue-300 hover:shadow-md transition-all gap-4">
+                                    <div class="flex items-start gap-4">
+                                        <div class="w-12 h-12 rounded-lg bg-blue-50 flex flex-col items-center justify-center border border-blue-100 flex-shrink-0">
+                                            <span class="text-xs font-bold text-blue-600"><?= substr($j['jam_mulai'], 0, 5) ?></span>
+                                            <span class="text-[10px] text-blue-400 font-medium">s/d</span>
+                                        </div>
+                                        <div>
+                                            <h4 class="text-base font-bold text-slate-800 mb-0.5 group-hover:text-blue-700 transition-colors"><?= h($j['nama_mapel']) ?> <span class="text-slate-400 font-normal ml-1">— <?= h($j['nama_kelas']) ?></span></h4>
+                                            <p class="text-sm text-slate-500 font-medium flex items-center gap-1.5">
+                                                <span class="material-symbols-outlined text-[16px] text-slate-400">meeting_room</span> 
+                                                <?= $j['keterangan'] ? h($j['keterangan']) . ' • ' : '' ?><?= h($j['ruang'] ?? 'Ruang Kelas') ?>
+                                            </p>
+                                        </div>
                                     </div>
                                     <?php if ($sudahLewat): ?>
-                                        <span class="text-label-sm font-label-sm bg-surface-container px-3 py-1 rounded-full text-text-muted self-start md:self-auto">Selesai</span>
+                                        <span class="text-xs font-bold bg-slate-100 px-4 py-1.5 rounded-full text-slate-500 self-start md:self-center border border-slate-200">Selesai</span>
                                     <?php elseif ($j['jenis'] === 'reguler'): ?>
-                                        <a href="pages/materi_detail.php?kelas_id=<?= (int)$j['kelas_id'] ?>&mapel_id=<?= (int)$j['mapel_id'] ?>" class="px-4 py-2 bg-primary text-white text-label-md font-label-md rounded-lg hover:bg-primary-container transition-colors text-center shadow-2xs">Buka Kelas</a>
+                                        <a href="pages/materi_detail.php?kelas_id=<?= (int)$j['kelas_id'] ?>&mapel_id=<?= (int)$j['mapel_id'] ?>" class="px-5 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white text-sm font-bold rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all text-center shadow-sm hover:shadow self-start md:self-center whitespace-nowrap">Buka Kelas</a>
                                     <?php endif; ?>
                                 </div>
                             <?php endforeach; ?>
@@ -243,24 +258,30 @@ require_once __DIR__ . '/includes/topbar.php';
             </div>
 
             <!-- Pengumuman Sekolah -->
-            <div class="bg-white rounded-xl shadow-sm border border-outline-variant/70 overflow-hidden flex flex-col">
-                <div class="px-lg py-md border-b border-outline-variant flex items-center gap-sm bg-white">
-                    <span class="material-symbols-outlined text-primary">campaign</span>
-                    <h3 class="text-title-lg font-bold text-text-main">Pengumuman Sekolah</h3>
+            <div class="bg-white/80 backdrop-blur-md rounded-2xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] border border-slate-200/60 overflow-hidden flex flex-col">
+                <div class="px-6 py-5 border-b border-slate-100 flex items-center gap-3 bg-white/50">
+                    <span class="material-symbols-outlined text-indigo-600">campaign</span>
+                    <h3 class="text-lg font-bold text-slate-800">Pengumuman Sekolah</h3>
                 </div>
-                <div class="p-lg space-y-md flex-1">
+                <div class="p-6 space-y-4 flex-1 bg-slate-50/30">
                     <?php if (empty($pengumuman)): ?>
-                        <p class="text-body-sm text-text-muted">Belum ada pengumuman.</p>
+                        <p class="text-sm text-slate-500 font-medium text-center py-4">Belum ada pengumuman.</p>
                     <?php endif; ?>
                     <?php foreach ($pengumuman as $p): ?>
                         <?php $penting = $p['kategori'] === 'penting'; ?>
-                        <div class="bg-surface-container/30 border-l-4 <?= $penting ? 'border-primary' : 'border-secondary' ?> p-md rounded-r-xl">
-                            <div class="flex justify-between items-start mb-1">
-                                <span class="text-label-sm font-bold <?= $penting ? 'text-primary' : 'text-secondary' ?>"><?= $penting ? 'PENTING' : 'INFORMASI' ?></span>
-                                <span class="text-body-xs text-text-muted"><?= h(waktuRelatif($p['created_at'])) ?></span>
+                        <div class="bg-white border <?= $penting ? 'border-red-200 shadow-[0_2px_8px_-2px_rgba(239,68,68,0.1)]' : 'border-slate-200 shadow-sm' ?> p-4 rounded-xl relative overflow-hidden group hover:border-indigo-300 transition-colors">
+                            <?php if($penting): ?>
+                                <div class="absolute top-0 left-0 w-1 h-full bg-red-500"></div>
+                            <?php else: ?>
+                                <div class="absolute top-0 left-0 w-1 h-full bg-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                            <?php endif; ?>
+                            
+                            <div class="flex justify-between items-start mb-2 pl-1">
+                                <span class="text-[11px] font-bold tracking-wider uppercase <?= $penting ? 'text-red-600 bg-red-50 px-2 py-0.5 rounded' : 'text-indigo-600' ?>"><?= $penting ? 'PENTING' : 'INFORMASI' ?></span>
+                                <span class="text-xs font-medium text-slate-400"><?= h(waktuRelatif($p['created_at'])) ?></span>
                             </div>
-                            <h4 class="text-body-md font-bold text-text-main mb-1"><?= h($p['judul']) ?></h4>
-                            <p class="text-body-xs text-text-muted line-clamp-2"><?= strip_tags($p['isi']) ?></p>
+                            <h4 class="text-sm font-bold text-slate-800 mb-1.5 pl-1"><?= h($p['judul']) ?></h4>
+                            <p class="text-xs text-slate-500 line-clamp-2 leading-relaxed pl-1"><?= strip_tags($p['isi']) ?></p>
                         </div>
                     <?php endforeach; ?>
                 </div>

@@ -59,7 +59,7 @@ if (!empty($logos)) {
             <!-- Beranda -->
             <?php $isBeranda = $currentPage === 'dashboard'; ?>
             <a href="<?= APP_URL ?>/index.php" 
-               class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all <?= $isBeranda ? 'bg-[#10b981] text-white font-bold shadow-xs' : 'text-gray-700 hover:bg-gray-100' ?>">
+               class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all <?= $isBeranda ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-bold shadow-md' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900' ?>">
                 <span class="material-symbols-outlined text-[20px]">desktop_windows</span>
                 <span>Beranda</span>
             </a>
@@ -67,7 +67,7 @@ if (!empty($logos)) {
             <!-- Profile -->
             <?php $isProfile = $currentPage === 'pengaturan'; ?>
             <a href="<?= APP_URL ?>/pages/pengaturan.php" 
-               class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all <?= $isProfile ? 'bg-[#10b981] text-white font-bold shadow-xs' : 'text-gray-700 hover:bg-gray-100' ?>">
+               class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all <?= $isProfile ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-bold shadow-md' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900' ?>">
                 <span class="material-symbols-outlined text-[20px]">person</span>
                 <span>Profile</span>
             </a>
@@ -75,7 +75,7 @@ if (!empty($logos)) {
             <!-- Pengumuman -->
             <?php $isPengumuman = $currentPage === 'pengumuman'; ?>
             <a href="<?= APP_URL ?>/pages/pengumuman.php" 
-               class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all <?= $isPengumuman ? 'bg-[#10b981] text-white font-bold shadow-xs' : 'text-gray-700 hover:bg-gray-100' ?>">
+               class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all <?= $isPengumuman ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-bold shadow-md' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900' ?>">
                 <span class="material-symbols-outlined text-[20px]">campaign</span>
                 <span>Pengumuman</span>
             </a>
@@ -83,7 +83,7 @@ if (!empty($logos)) {
             <!-- Dropdown Wali Kelas -->
             <div class="pt-1">
                 <button type="button" onclick="toggleDropdown('dropdownWaliKelas')" 
-                        class="w-full flex items-center justify-between px-3.5 py-2.5 bg-[#e9ecef] hover:bg-gray-300/80 rounded-lg text-gray-800 font-semibold transition-all">
+                        class="w-full flex items-center justify-between px-3.5 py-2.5 bg-slate-50 hover:bg-slate-100 rounded-lg text-slate-700 font-semibold transition-all shadow-sm">
                     <div class="flex items-center gap-3">
                         <span class="material-symbols-outlined text-[20px]">pie_chart</span>
                         <span>Wali Kelas</span>
@@ -91,28 +91,28 @@ if (!empty($logos)) {
                     <span id="icon-dropdownWaliKelas" class="material-symbols-outlined text-[20px] transition-transform duration-200">keyboard_arrow_down</span>
                 </button>
                 <div id="dropdownWaliKelas" class="<?= ($currentPage === 'absen_qr') ? '' : 'hidden' ?> pl-4 pt-1 space-y-0.5">
-                    <a href="<?= APP_URL ?>/pages/kelas_jadwal.php" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:text-emerald-600 hover:bg-gray-50 rounded-md transition-colors text-[13px]">
+                    <a href="<?= APP_URL ?>/pages/kelas_jadwal.php" class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-blue-600 hover:translate-x-1 transition-all text-[13px] font-medium">
                         <span class="material-symbols-outlined text-[18px]">calendar_month</span> Jadwal Kelas Saya
                     </a>
-                    <a href="<?= APP_URL ?>/pages/absen_qr.php" class="flex items-center gap-3 px-3 py-2 <?= ($currentPage === 'absen_qr') ? 'text-emerald-700 bg-emerald-50 font-bold' : 'text-gray-600 hover:text-emerald-600 hover:bg-gray-50' ?> rounded-md transition-colors text-[13px]">
+                    <a href="<?= APP_URL ?>/pages/absen_qr.php" class="flex items-center gap-3 px-3 py-2 <?= ($currentPage === 'absen_qr') ? 'text-blue-700 bg-blue-50 font-bold translate-x-1' : 'text-slate-500 hover:text-blue-600 hover:translate-x-1' ?> rounded-md transition-all text-[13px] font-medium">
                         <span class="material-symbols-outlined text-[18px]">qr_code_2</span> Absen QR Code
                     </a>
-                    <a href="<?= APP_URL ?>/pages/data_siswa.php" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:text-emerald-600 hover:bg-gray-50 rounded-md transition-colors text-[13px]">
+                    <a href="<?= APP_URL ?>/pages/rekap_presensi.php" class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-blue-600 hover:translate-x-1 transition-all text-[13px] font-medium">
                         <span class="material-symbols-outlined text-[18px]">fact_check</span> Rekap Presensi
                     </a>
-                    <a href="<?= APP_URL ?>/pages/kelas_jadwal.php?tab=jurnal" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:text-emerald-600 hover:bg-gray-50 rounded-md transition-colors text-[13px]">
+                    <a href="<?= APP_URL ?>/pages/kelas_jadwal.php?tab=jurnal" class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-blue-600 hover:translate-x-1 transition-all text-[13px] font-medium">
                         <span class="material-symbols-outlined text-[18px]">auto_stories</span> Jurnal Kelas
                     </a>
-                    <a href="<?= APP_URL ?>/pages/data_siswa.php" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:text-emerald-600 hover:bg-gray-50 rounded-md transition-colors text-[13px]">
+                    <a href="<?= APP_URL ?>/pages/data_siswa.php" class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-blue-600 hover:translate-x-1 transition-all text-[13px] font-medium">
                         <span class="material-symbols-outlined text-[18px]">group</span> Siswa
                     </a>
-                    <a href="<?= APP_URL ?>/pages/data_siswa.php?tab=struktur" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:text-emerald-600 hover:bg-gray-50 rounded-md transition-colors text-[13px]">
+                    <a href="<?= APP_URL ?>/pages/data_siswa.php?tab=struktur" class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-blue-600 hover:translate-x-1 transition-all text-[13px] font-medium">
                         <span class="material-symbols-outlined text-[18px]">radio_button_unchecked</span> Struktur
                     </a>
-                    <a href="<?= APP_URL ?>/pages/data_siswa.php?tab=catatan" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:text-emerald-600 hover:bg-gray-50 rounded-md transition-colors text-[13px]">
+                    <a href="<?= APP_URL ?>/pages/data_siswa.php?tab=catatan" class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-blue-600 hover:translate-x-1 transition-all text-[13px] font-medium">
                         <span class="material-symbols-outlined text-[18px]">edit_note</span> Catatan
                     </a>
-                    <a href="<?= APP_URL ?>/pages/data_siswa.php?tab=poin" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:text-emerald-600 hover:bg-gray-50 rounded-md transition-colors text-[13px]">
+                    <a href="<?= APP_URL ?>/pages/data_siswa.php?tab=poin" class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-blue-600 hover:translate-x-1 transition-all text-[13px] font-medium">
                         <span class="material-symbols-outlined text-[18px]">star</span> Poin Kelas
                     </a>
                 </div>
@@ -121,7 +121,7 @@ if (!empty($logos)) {
             <!-- Dropdown Belajar Mengajar -->
             <div class="pt-1">
                 <button type="button" onclick="toggleDropdown('dropdownBelajarMengajar')" 
-                        class="w-full flex items-center justify-between px-3.5 py-2.5 bg-[#e9ecef] hover:bg-gray-300/80 rounded-lg text-gray-800 font-semibold transition-all">
+                        class="w-full flex items-center justify-between px-3.5 py-2.5 bg-slate-50 hover:bg-slate-100 rounded-lg text-slate-700 font-semibold transition-all shadow-sm">
                     <div class="flex items-center gap-3">
                         <span class="material-symbols-outlined text-[20px]">domain</span>
                         <span>Belajar Mengajar</span>
@@ -129,16 +129,16 @@ if (!empty($logos)) {
                     <span id="icon-dropdownBelajarMengajar" class="material-symbols-outlined text-[20px] transition-transform duration-200">keyboard_arrow_down</span>
                 </button>
                 <div id="dropdownBelajarMengajar" class="<?= ($currentPage === 'kinerja_harian') ? '' : 'hidden' ?> pl-4 pt-1 space-y-0.5">
-                    <a href="<?= APP_URL ?>/pages/kelas_jadwal.php?tab=jurnal" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:text-emerald-600 hover:bg-gray-50 rounded-md transition-colors text-[13px]">
+                    <a href="<?= APP_URL ?>/pages/kelas_jadwal.php?tab=jurnal" class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-blue-600 hover:translate-x-1 transition-all text-[13px] font-medium">
                         <span class="material-symbols-outlined text-[18px]">auto_stories</span> Jurnal
                     </a>
-                    <a href="<?= APP_URL ?>/pages/kinerja_harian.php" class="flex items-center gap-3 px-3 py-2 <?= ($currentPage === 'kinerja_harian') ? 'text-emerald-700 bg-emerald-50 font-bold' : 'text-gray-600 hover:text-emerald-600 hover:bg-gray-50' ?> rounded-md transition-colors text-[13px]">
+                    <a href="<?= APP_URL ?>/pages/kinerja_harian.php" class="flex items-center gap-3 px-3 py-2 <?= ($currentPage === 'kinerja_harian') ? 'text-blue-700 bg-blue-50 font-bold translate-x-1' : 'text-slate-500 hover:text-blue-600 hover:translate-x-1' ?> rounded-md transition-all text-[13px] font-medium">
                         <span class="material-symbols-outlined text-[18px]">description</span> Laporan Kinerja Harian
                     </a>
-                    <a href="<?= APP_URL ?>/pages/kelas_jadwal.php" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:text-emerald-600 hover:bg-gray-50 rounded-md transition-colors text-[13px]">
+                    <a href="<?= APP_URL ?>/pages/kelas_jadwal.php" class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-blue-600 hover:translate-x-1 transition-all text-[13px] font-medium">
                         <span class="material-symbols-outlined text-[18px]">calendar_today</span> Jadwal Mengajar
                     </a>
-                    <a href="<?= APP_URL ?>/pages/data_siswa.php?tab=poin" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:text-emerald-600 hover:bg-gray-50 rounded-md transition-colors text-[13px]">
+                    <a href="<?= APP_URL ?>/pages/data_siswa.php?tab=poin" class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-blue-600 hover:translate-x-1 transition-all text-[13px] font-medium">
                         <span class="material-symbols-outlined text-[18px]">star</span> Input Poin Siswa
                     </a>
                 </div>
@@ -147,7 +147,7 @@ if (!empty($logos)) {
             <!-- Dropdown E-Learning -->
             <div class="pt-1">
                 <button type="button" onclick="toggleDropdown('dropdownELearning')" 
-                        class="w-full flex items-center justify-between px-3.5 py-2.5 bg-[#e9ecef] hover:bg-gray-300/80 rounded-lg text-gray-800 font-semibold transition-all">
+                        class="w-full flex items-center justify-between px-3.5 py-2.5 bg-slate-50 hover:bg-slate-100 rounded-lg text-slate-700 font-semibold transition-all shadow-sm">
                     <div class="flex items-center gap-3">
                         <span class="material-symbols-outlined text-[20px]">computer</span>
                         <span>E-Learning</span>
@@ -155,25 +155,25 @@ if (!empty($logos)) {
                     <span id="icon-dropdownELearning" class="material-symbols-outlined text-[20px] transition-transform duration-200">keyboard_arrow_down</span>
                 </button>
                 <div id="dropdownELearning" class="hidden pl-4 pt-1 space-y-0.5">
-                    <a href="<?= APP_URL ?>/pages/materi.php" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:text-emerald-600 hover:bg-gray-50 rounded-md transition-colors text-[13px]">
+                    <a href="<?= APP_URL ?>/pages/materi.php" class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-blue-600 hover:translate-x-1 transition-all text-[13px] font-medium">
                         <span class="material-symbols-outlined text-[18px]">build</span> Materi
                     </a>
-                    <a href="<?= APP_URL ?>/pages/tugas_ujian.php" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:text-emerald-600 hover:bg-gray-50 rounded-md transition-colors text-[13px]">
+                    <a href="<?= APP_URL ?>/pages/tugas_ujian.php" class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-blue-600 hover:translate-x-1 transition-all text-[13px] font-medium">
                         <span class="material-symbols-outlined text-[18px]">assignment</span> Tugas
                     </a>
-                    <a href="<?= APP_URL ?>/pages/rekap_nilai.php" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:text-emerald-600 hover:bg-gray-50 rounded-md transition-colors text-[13px]">
+                    <a href="<?= APP_URL ?>/pages/rekap_nilai.php" class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-blue-600 hover:translate-x-1 transition-all text-[13px] font-medium">
                         <span class="material-symbols-outlined text-[18px]">assignment_turned_in</span> Nilai Harian
                     </a>
-                    <a href="<?= APP_URL ?>/pages/data_siswa.php?tab=kehadiran" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:text-emerald-600 hover:bg-gray-50 rounded-md transition-colors text-[13px]">
+                    <a href="<?= APP_URL ?>/pages/data_siswa.php?tab=kehadiran" class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-blue-600 hover:translate-x-1 transition-all text-[13px] font-medium">
                         <span class="material-symbols-outlined text-[18px]">how_to_reg</span> Kehadiran Harian
                     </a>
-                    <a href="<?= APP_URL ?>/pages/data_siswa.php?tab=kehadiran_bulanan" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:text-emerald-600 hover:bg-gray-50 rounded-md transition-colors text-[13px]">
+                    <a href="<?= APP_URL ?>/pages/data_siswa.php?tab=kehadiran_bulanan" class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-blue-600 hover:translate-x-1 transition-all text-[13px] font-medium">
                         <span class="material-symbols-outlined text-[18px]">format_list_bulleted</span> Kehadiran Bulanan
                     </a>
-                    <a href="<?= APP_URL ?>/pages/rekap_nilai.php" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:text-emerald-600 hover:bg-gray-50 rounded-md transition-colors text-[13px]">
+                    <a href="<?= APP_URL ?>/pages/rekap_nilai.php" class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-blue-600 hover:translate-x-1 transition-all text-[13px] font-medium">
                         <span class="material-symbols-outlined text-[18px]">emoji_events</span> Rekap Nilai
                     </a>
-                    <a href="<?= APP_URL ?>/pages/pengaturan.php" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:text-emerald-600 hover:bg-gray-50 rounded-md transition-colors text-[13px]">
+                    <a href="<?= APP_URL ?>/pages/pengaturan.php" class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-blue-600 hover:translate-x-1 transition-all text-[13px] font-medium">
                         <span class="material-symbols-outlined text-[18px]">edit_note</span> Catatan Guru
                     </a>
                 </div>
@@ -182,7 +182,7 @@ if (!empty($logos)) {
             <!-- Dropdown Ulangan / Ujian -->
             <div class="pt-1">
                 <button type="button" onclick="toggleDropdown('dropdownUjian')" 
-                        class="w-full flex items-center justify-between px-3.5 py-2.5 bg-[#e9ecef] hover:bg-gray-300/80 rounded-lg text-gray-800 font-semibold transition-all">
+                        class="w-full flex items-center justify-between px-3.5 py-2.5 bg-slate-50 hover:bg-slate-100 rounded-lg text-slate-700 font-semibold transition-all shadow-sm">
                     <div class="flex items-center gap-3">
                         <span class="material-symbols-outlined text-[20px]">school</span>
                         <span>Ulangan / Ujian</span>
@@ -190,19 +190,19 @@ if (!empty($logos)) {
                     <span id="icon-dropdownUjian" class="material-symbols-outlined text-[20px] transition-transform duration-200">keyboard_arrow_down</span>
                 </button>
                 <div id="dropdownUjian" class="hidden pl-4 pt-1 space-y-0.5">
-                    <a href="<?= APP_URL ?>/pages/export_nilai.php" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:text-emerald-600 hover:bg-gray-50 rounded-md transition-colors text-[13px]">
+                    <a href="<?= APP_URL ?>/pages/export_nilai.php" class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-blue-600 hover:translate-x-1 transition-all text-[13px] font-medium">
                         <span class="material-symbols-outlined text-[18px]">print</span> Cetak
                     </a>
-                    <a href="<?= APP_URL ?>/pages/data_siswa.php" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:text-emerald-600 hover:bg-gray-50 rounded-md transition-colors text-[13px]">
+                    <a href="<?= APP_URL ?>/pages/data_siswa.php" class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-blue-600 hover:translate-x-1 transition-all text-[13px] font-medium">
                         <span class="material-symbols-outlined text-[18px]">person_search</span> Status Siswa
                     </a>
-                    <a href="<?= APP_URL ?>/pages/tugas_ujian.php" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:text-emerald-600 hover:bg-gray-50 rounded-md transition-colors text-[13px]">
+                    <a href="<?= APP_URL ?>/pages/tugas_ujian.php" class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-blue-600 hover:translate-x-1 transition-all text-[13px] font-medium">
                         <span class="material-symbols-outlined text-[18px]">article</span> Hasil Ujian
                     </a>
-                    <a href="<?= APP_URL ?>/pages/rekap_nilai.php?tab=analisis" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:text-emerald-600 hover:bg-gray-50 rounded-md transition-colors text-[13px]">
+                    <a href="<?= APP_URL ?>/pages/rekap_nilai.php?tab=analisis" class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-blue-600 hover:translate-x-1 transition-all text-[13px] font-medium">
                         <span class="material-symbols-outlined text-[18px]">analytics</span> Analisis Soal
                     </a>
-                    <a href="<?= APP_URL ?>/pages/rekap_nilai.php" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:text-emerald-600 hover:bg-gray-50 rounded-md transition-colors text-[13px]">
+                    <a href="<?= APP_URL ?>/pages/rekap_nilai.php" class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-blue-600 hover:translate-x-1 transition-all text-[13px] font-medium">
                         <span class="material-symbols-outlined text-[18px]">emoji_events</span> Rekap Nilai
                     </a>
                 </div>
@@ -216,7 +216,7 @@ if (!empty($logos)) {
             <!-- Dropdown Data Rapor -->
             <div>
                 <button type="button" onclick="toggleDropdown('dropdownDataRapor')" 
-                        class="w-full flex items-center justify-between px-3.5 py-2.5 bg-[#e9ecef] hover:bg-gray-300/80 rounded-lg text-gray-800 font-semibold transition-all">
+                        class="w-full flex items-center justify-between px-3.5 py-2.5 bg-slate-50 hover:bg-slate-100 rounded-lg text-slate-700 font-semibold transition-all shadow-sm">
                     <div class="flex items-center gap-3">
                         <span class="material-symbols-outlined text-[20px]">pie_chart</span>
                         <span>Data Rapor</span>
@@ -224,13 +224,13 @@ if (!empty($logos)) {
                     <span id="icon-dropdownDataRapor" class="material-symbols-outlined text-[20px] transition-transform duration-200">keyboard_arrow_down</span>
                 </button>
                 <div id="dropdownDataRapor" class="hidden pl-4 pt-1 space-y-0.5">
-                    <a href="<?= APP_URL ?>/pages/rekap_nilai.php?tab=kkm" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:text-emerald-600 hover:bg-gray-50 rounded-md transition-colors text-[13px]">
+                    <a href="<?= APP_URL ?>/pages/rekap_nilai.php?tab=kkm" class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-blue-600 hover:translate-x-1 transition-all text-[13px] font-medium">
                         <span class="material-symbols-outlined text-[18px]">balance</span> KKM dan Bobot
                     </a>
-                    <a href="<?= APP_URL ?>/pages/rekap_nilai.php?tab=indikator" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:text-emerald-600 hover:bg-gray-50 rounded-md transition-colors text-[13px]">
+                    <a href="<?= APP_URL ?>/pages/rekap_nilai.php?tab=indikator" class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-blue-600 hover:translate-x-1 transition-all text-[13px] font-medium">
                         <span class="material-symbols-outlined text-[18px]">menu_book</span> Indikator Nilai
                     </a>
-                    <a href="<?= APP_URL ?>/pages/rekap_nilai.php" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:text-emerald-600 hover:bg-gray-50 rounded-md transition-colors text-[13px]">
+                    <a href="<?= APP_URL ?>/pages/rekap_nilai.php" class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-blue-600 hover:translate-x-1 transition-all text-[13px] font-medium">
                         <span class="material-symbols-outlined text-[18px]">group_add</span> Input Nilai
                     </a>
                 </div>
@@ -239,7 +239,7 @@ if (!empty($logos)) {
             <!-- Dropdown Input Wali Kelas -->
             <div class="pt-1">
                 <button type="button" onclick="toggleDropdown('dropdownInputWaliKelas')" 
-                        class="w-full flex items-center justify-between px-3.5 py-2.5 bg-[#e9ecef] hover:bg-gray-300/80 rounded-lg text-gray-800 font-semibold transition-all">
+                        class="w-full flex items-center justify-between px-3.5 py-2.5 bg-slate-50 hover:bg-slate-100 rounded-lg text-slate-700 font-semibold transition-all shadow-sm">
                     <div class="flex items-center gap-3">
                         <span class="material-symbols-outlined text-[20px]">pie_chart</span>
                         <span>Input Wali Kelas</span>
@@ -247,19 +247,19 @@ if (!empty($logos)) {
                     <span id="icon-dropdownInputWaliKelas" class="material-symbols-outlined text-[20px] transition-transform duration-200">keyboard_arrow_down</span>
                 </button>
                 <div id="dropdownInputWaliKelas" class="hidden pl-4 pt-1 space-y-0.5">
-                    <a href="<?= APP_URL ?>/pages/rekap_nilai.php?tab=spiritual" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:text-emerald-600 hover:bg-gray-50 rounded-md transition-colors text-[13px]">
+                    <a href="<?= APP_URL ?>/pages/rekap_nilai.php?tab=spiritual" class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-blue-600 hover:translate-x-1 transition-all text-[13px] font-medium">
                         <span class="material-symbols-outlined text-[18px]">menu_book</span> Sikap Spiritual
                     </a>
-                    <a href="<?= APP_URL ?>/pages/rekap_nilai.php?tab=sosial" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:text-emerald-600 hover:bg-gray-50 rounded-md transition-colors text-[13px]">
+                    <a href="<?= APP_URL ?>/pages/rekap_nilai.php?tab=sosial" class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-blue-600 hover:translate-x-1 transition-all text-[13px] font-medium">
                         <span class="material-symbols-outlined text-[18px]">menu_book</span> Sikap Sosial
                     </a>
-                    <a href="<?= APP_URL ?>/pages/rekap_nilai.php?tab=prestasi" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:text-emerald-600 hover:bg-gray-50 rounded-md transition-colors text-[13px]">
+                    <a href="<?= APP_URL ?>/pages/rekap_nilai.php?tab=prestasi" class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-blue-600 hover:translate-x-1 transition-all text-[13px] font-medium">
                         <span class="material-symbols-outlined text-[18px]">groups</span> Prestasi
                     </a>
-                    <a href="<?= APP_URL ?>/pages/data_siswa.php" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:text-emerald-600 hover:bg-gray-50 rounded-md transition-colors text-[13px]">
+                    <a href="<?= APP_URL ?>/pages/data_siswa.php" class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-blue-600 hover:translate-x-1 transition-all text-[13px] font-medium">
                         <span class="material-symbols-outlined text-[18px]">groups</span> Kehadiran
                     </a>
-                    <a href="<?= APP_URL ?>/pages/data_siswa.php?tab=kenaikan" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:text-emerald-600 hover:bg-gray-50 rounded-md transition-colors text-[13px]">
+                    <a href="<?= APP_URL ?>/pages/data_siswa.php?tab=kenaikan" class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-blue-600 hover:translate-x-1 transition-all text-[13px] font-medium">
                         <span class="material-symbols-outlined text-[18px]">groups</span> Kenaikan
                     </a>
                 </div>
@@ -271,22 +271,22 @@ if (!empty($logos)) {
             <div class="px-3 text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2">CETAK</div>
 
             <a href="<?= APP_URL ?>/pages/export_nilai.php?tipe=pts" 
-               class="flex items-center gap-3 px-3.5 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-all text-body-md">
+               class="flex items-center gap-3 px-3.5 py-2 text-slate-600 hover:text-blue-600 hover:bg-slate-50 rounded-lg transition-all text-sm font-medium">
                 <span class="material-symbols-outlined text-[20px]">menu_book</span>
                 <span>Rapor PTS</span>
             </a>
             <a href="<?= APP_URL ?>/pages/export_nilai.php?tipe=pas" 
-               class="flex items-center gap-3 px-3.5 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-all text-body-md">
+               class="flex items-center gap-3 px-3.5 py-2 text-slate-600 hover:text-blue-600 hover:bg-slate-50 rounded-lg transition-all text-sm font-medium">
                 <span class="material-symbols-outlined text-[20px]">menu_book</span>
                 <span>Rapor Akhir</span>
             </a>
             <a href="<?= APP_URL ?>/pages/export_nilai.php?tipe=ledger" 
-               class="flex items-center gap-3 px-3.5 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-all text-body-md">
+               class="flex items-center gap-3 px-3.5 py-2 text-slate-600 hover:text-blue-600 hover:bg-slate-50 rounded-lg transition-all text-sm font-medium">
                 <span class="material-symbols-outlined text-[20px]">groups</span>
                 <span>Ledger</span>
             </a>
             <a href="<?= APP_URL ?>/pages/export_nilai.php?tipe=dkn" 
-               class="flex items-center gap-3 px-3.5 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-all text-body-md">
+               class="flex items-center gap-3 px-3.5 py-2 text-slate-600 hover:text-blue-600 hover:bg-slate-50 rounded-lg transition-all text-sm font-medium">
                 <span class="material-symbols-outlined text-[20px]">groups</span>
                 <span>DKN</span>
             </a>
@@ -297,7 +297,7 @@ if (!empty($logos)) {
             <div class="px-3 text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2">ARSIP</div>
 
             <a href="<?= APP_URL ?>/pages/export_nilai.php?tab=arsip" 
-               class="flex items-center gap-3 px-3.5 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-all text-body-md">
+               class="flex items-center gap-3 px-3.5 py-2 text-slate-600 hover:text-blue-600 hover:bg-slate-50 rounded-lg transition-all text-sm font-medium">
                 <span class="material-symbols-outlined text-[20px]">account_balance</span>
                 <span>Arsip Rapor</span>
             </a>

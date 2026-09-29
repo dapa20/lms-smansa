@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 require_once __DIR__ . '/../includes/auth.php';
 requireLogin();
 
@@ -159,20 +159,27 @@ require_once __DIR__ . '/../includes/topbar.php';
                     <!-- Form edit no. telepon (satu-satunya yang boleh diubah sendiri) -->
                     <div class="border-t border-outline-variant pt-5">
                         <h4 class="text-label-lg font-semibold text-text-main mb-3 flex items-center gap-2">
-                            <span class="material-symbols-outlined text-[18px] text-primary">phone</span>
-                            Nomor Telepon
+                            <span class="material-symbols-outlined text-[18px] text-primary">edit</span>
+                            Ubah Data Pribadi
                             <span class="text-label-sm font-normal text-text-muted">(dapat diubah sendiri)</span>
                         </h4>
-                        <form action="../actions/profil/profil_update.php" method="post" class="flex gap-3 items-end">
-                            <div class="flex-1">
-                                <label class="text-label-sm text-text-muted block mb-1">No. Telepon / WhatsApp</label>
-                                <input name="no_telp" value="<?= h($user['no_telp'] ?? '') ?>"
-                                       placeholder="Contoh: 0812-3456-7890"
-                                       class="w-full px-4 py-2 rounded-lg border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none text-body-sm">
+                        <form action="../actions/profil/profil_update.php" method="post" enctype="multipart/form-data" class="flex flex-col gap-4">
+                            <div>
+                                <label class="text-label-sm text-text-muted block mb-1">Ganti Foto Profil (Opsional)</label>
+                                <input type="file" name="foto" accept="image/png,image/jpeg" class="w-full px-4 py-2 rounded-lg border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none text-body-sm bg-surface-white">
+                                <p class="text-[11px] text-text-muted mt-1">Format JPG/PNG, maks. 2MB.</p>
                             </div>
-                            <button type="submit" class="px-5 py-2 rounded-lg text-label-lg font-semibold bg-primary text-white hover:bg-primary/90 transition-colors shadow-sm whitespace-nowrap flex items-center gap-1.5">
-                                <span class="material-symbols-outlined text-[16px]">save</span> Simpan
-                            </button>
+                            <div class="flex gap-3 items-end">
+                                <div class="flex-1">
+                                    <label class="text-label-sm text-text-muted block mb-1">No. Telepon / WhatsApp</label>
+                                    <input name="no_telp" value="<?= h($user['no_telp'] ?? '') ?>"
+                                           placeholder="Contoh: 0812-3456-7890"
+                                           class="w-full px-4 py-2 rounded-lg border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none text-body-sm">
+                                </div>
+                                <button type="submit" class="px-5 py-2 rounded-lg text-label-lg font-semibold bg-primary text-white hover:bg-primary/90 transition-colors shadow-sm whitespace-nowrap flex items-center gap-1.5">
+                                    <span class="material-symbols-outlined text-[16px]">save</span> Simpan
+                                </button>
+                            </div>
                         </form>
                     </div>
                 </div>

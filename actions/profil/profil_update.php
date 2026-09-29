@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 require_once __DIR__ . '/../../includes/auth.php';
 requireLogin();
 
@@ -7,15 +7,19 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 $userId        = (int)$_SESSION['user_id'];
+$isAdmin       = isAdmin();
 $namaLengkap   = trim($_POST['nama_lengkap'] ?? '');
 $email         = trim($_POST['email'] ?? '');
 $nip           = trim($_POST['nip'] ?? '');
 $mapelKeahlian = trim($_POST['mapel_keahlian'] ?? '');
 $bio           = trim($_POST['bio'] ?? '');
+$noTelp        = trim($_POST['no_telp'] ?? '');
 
-if ($namaLengkap === '' || $email === '') {
-    setFlash('gagal', 'Nama dan email wajib diisi.');
-    redirect('../../pages/pengaturan.php');
+if ($isAdmin) {
+    if ($namaLengkap === '' || $email === '') {
+        setFlash('gagal', 'Nama dan email wajib diisi.');
+        redirect('../../pages/pengaturan.php');
+    }
 }
 
 // Upload foto baru (opsional)
@@ -31,14 +35,26 @@ if (!empty($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
 }
 
 try {
-    if ($namaFileFoto) {
-        $stmt = $pdo->prepare('UPDATE users SET nama_lengkap=?, email=?, nip=?, mapel_keahlian=?, bio=?, foto=? WHERE id=?');
-        $stmt->execute([$namaLengkap, $email, $nip ?: null, $mapelKeahlian ?: null, $bio ?: null, $namaFileFoto, $userId]);
+    if ($isAdmin) {
+        if ($namaFileFoto) {
+            $stmt = $pdo->prepare('UPDATE users SET nama_lengkap=?, email=?, nip=?, mapel_keahlian=?, bio=?, no_telp=?, foto=? WHERE id=?');
+            $stmt->execute([$namaLengkap, $email, $nip ?: null, $mapelKeahlian ?: null, $bio ?: null, $noTelp ?: null, $namaFileFoto, $userId]);
+        } else {
+            $stmt = $pdo->prepare('UPDATE users SET nama_lengkap=?, email=?, nip=?, mapel_keahlian=?, bio=?, no_telp=? WHERE id=?');
+            $stmt->execute([$namaLengkap, $email, $nip ?: null, $mapelKeahlian ?: null, $bio ?: null, $noTelp ?: null, $userId]);
+        }
+        $_SESSION['user_name'] = $namaLengkap;
     } else {
-        $stmt = $pdo->prepare('UPDATE users SET nama_lengkap=?, email=?, nip=?, mapel_keahlian=?, bio=? WHERE id=?');
-        $stmt->execute([$namaLengkap, $email, $nip ?: null, $mapelKeahlian ?: null, $bio ?: null, $userId]);
+        // Guru hanya bisa update no_telp dan foto
+        if ($namaFileFoto) {
+            $stmt = $pdo->prepare('UPDATE users SET no_telp=?, foto=? WHERE id=?');
+            $stmt->execute([$noTelp ?: null, $namaFileFoto, $userId]);
+        } else {
+            $stmt = $pdo->prepare('UPDATE users SET no_telp=? WHERE id=?');
+            $stmt->execute([$noTelp ?: null, $userId]);
+        }
     }
-    $_SESSION['user_name'] = $namaLengkap;
+    
     if (empty($_SESSION['flash'])) {
         setFlash('sukses', 'Profil berhasil diperbarui.');
     }
