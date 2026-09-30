@@ -7,6 +7,9 @@ $currentPage = 'nilai';
 $user        = currentUser();
 $isAdmin     = isAdmin();
 
+// Auto-pastikan tabel fitur tambahan tersedia (kkm_mapel, indikator_nilai, dll)
+ensureFiturTambahanTables($pdo);
+
 if (($_GET['tab'] ?? '') === 'laporan') {
     redirect('kinerja_harian.php');
 }
@@ -131,17 +134,20 @@ require_once __DIR__ . '/../includes/topbar.php';
         renderFlash(); 
         
         $currentTab = $_GET['tab'] ?? '';
-        $unimplementedTabs = [
-            'analisis' => 'Analisis Soal',
-            'kkm' => 'KKM dan Bobot',
-            'indikator' => 'Indikator Nilai',
-            'spiritual' => 'Sikap Spiritual',
-            'sosial' => 'Sikap Sosial',
-            'prestasi' => 'Prestasi'
-        ];
+        $unimplementedTabs = []; // semua tab sudah diisi
         
-        if (array_key_exists($currentTab, $unimplementedTabs)) {
-            renderComingSoon($unimplementedTabs[$currentTab]);
+        // Routing khusus tab tambahan.
+        // tab_sikap.php dipakai bersama oleh 'spiritual' dan 'sosial'.
+        $tabMap = [
+            'analisis'  => 'tab_analisis',
+            'kkm'       => 'tab_kkm',
+            'indikator' => 'tab_indikator',
+            'spiritual' => 'tab_sikap',
+            'sosial'    => 'tab_sikap',
+            'prestasi'  => 'tab_prestasi',
+        ];
+        if (isset($tabMap[$currentTab])) {
+            require __DIR__ . '/../includes/partials/tambahan/' . $tabMap[$currentTab] . '.php';
             echo '</div></main>';
             require_once __DIR__ . '/../includes/footer.php';
             exit;

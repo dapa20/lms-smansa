@@ -7,6 +7,9 @@ $currentPage = 'siswa';
 $user        = currentUser();
 $isAdmin     = isAdmin();
 
+// Auto-pastikan tabel fitur tambahan tersedia
+ensureFiturTambahanTables($pdo);
+
 // Jika parameter tab absen_qr diakses, redirect ke halaman baru
 if (($_GET['tab'] ?? '') === 'absen_qr') {
     redirect('absen_qr.php');
@@ -39,20 +42,10 @@ require_once __DIR__ . '/../includes/topbar.php';
         renderFlash(); 
         
         $currentTab = $_GET['tab'] ?? '';
-        $unimplementedTabs = [
-            'struktur' => 'Struktur',
-            'catatan' => 'Catatan',
-            'poin' => 'Poin Kelas',
-            'kehadiran' => 'Kehadiran Harian',
-            'kehadiran_bulanan' => 'Kehadiran Bulanan',
-            'kenaikan' => 'Kenaikan'
-        ];
+        $unimplementedTabs = []; // semua tab sudah lama diisi
         
-        if (array_key_exists($currentTab, $unimplementedTabs)) {
-            renderComingSoon($unimplementedTabs[$currentTab]);
-            echo '</div></main>';
-            require_once __DIR__ . '/../includes/footer.php';
-            exit;
+        if (array_key_exists('', $unimplementedTabs) === false) {
+            // tidak ada tab yang belum diimplementasi
         }
         ?>
 
@@ -67,11 +60,57 @@ require_once __DIR__ . '/../includes/topbar.php';
 
         <?php if ($isAdmin): ?>
         <!-- Tab Switcher (khusus Admin) -->
-        <div class="flex gap-2 mb-lg border-b border-outline-variant">
-            <a href="data_siswa.php" class="px-4 py-2 text-label-lg font-label-lg border-b-2 -mb-px transition-colors <?= $tab === 'siswa' ? 'border-primary text-primary' : 'border-transparent text-text-muted hover:text-primary' ?>">Data Siswa</a>
-            <a href="data_siswa.php?tab=guru" class="px-4 py-2 text-label-lg font-label-lg border-b-2 -mb-px transition-colors <?= $tab === 'guru' ? 'border-primary text-primary' : 'border-transparent text-text-muted hover:text-primary' ?>">Data Guru</a>
+        <div class="flex gap-2 mb-lg border-b border-outline-variant overflow-x-auto">
+            <a href="data_siswa.php" class="px-4 py-2 text-label-lg font-label-lg border-b-2 -mb-px transition-colors whitespace-nowrap <?= $tab === 'siswa' ? 'border-primary text-primary' : 'border-transparent text-text-muted hover:text-primary' ?>">Data Siswa</a>
+            <a href="data_siswa.php?tab=struktur" class="px-4 py-2 text-label-lg font-label-lg border-b-2 -mb-px transition-colors whitespace-nowrap <?= $currentTab === 'struktur' ? 'border-primary text-primary' : 'border-transparent text-text-muted hover:text-primary' ?>">Struktur</a>
+            <a href="data_siswa.php?tab=catatan" class="px-4 py-2 text-label-lg font-label-lg border-b-2 -mb-px transition-colors whitespace-nowrap <?= $currentTab === 'catatan' ? 'border-primary text-primary' : 'border-transparent text-text-muted hover:text-primary' ?>">Catatan</a>
+            <a href="data_siswa.php?tab=poin" class="px-4 py-2 text-label-lg font-label-lg border-b-2 -mb-px transition-colors whitespace-nowrap <?= $currentTab === 'poin' ? 'border-primary text-primary' : 'border-transparent text-text-muted hover:text-primary' ?>">Poin</a>
+            <a href="data_siswa.php?tab=kehadiran" class="px-4 py-2 text-label-lg font-label-lg border-b-2 -mb-px transition-colors whitespace-nowrap <?= $currentTab === 'kehadiran' ? 'border-primary text-primary' : 'border-transparent text-text-muted hover:text-primary' ?>">Kehadiran Harian</a>
+            <a href="data_siswa.php?tab=kehadiran_bulanan" class="px-4 py-2 text-label-lg font-label-lg border-b-2 -mb-px transition-colors whitespace-nowrap <?= $currentTab === 'kehadiran_bulanan' ? 'border-primary text-primary' : 'border-transparent text-text-muted hover:text-primary' ?>">Kehadiran Bulanan</a>
+            <a href="data_siswa.php?tab=guru" class="px-4 py-2 text-label-lg font-label-lg border-b-2 -mb-px transition-colors whitespace-nowrap <?= $tab === 'guru' ? 'border-primary text-primary' : 'border-transparent text-text-muted hover:text-primary' ?>">Data Guru</a>
+            <a href="data_siswa.php?tab=kenaikan" class="px-4 py-2 text-label-lg font-label-lg border-b-2 -mb-px transition-colors whitespace-nowrap <?= $currentTab === 'kenaikan' ? 'border-primary text-primary' : 'border-transparent text-text-muted hover:text-primary' ?>">Kenaikan</a>
         </div>
         <?php endif; ?>
+
+        <?php
+        // Routing tab tambahan
+        if ($currentTab === 'struktur') {
+            require __DIR__ . '/../includes/partials/tambahan/tab_struktur.php';
+            echo '</div></main>';
+            require_once __DIR__ . '/../includes/footer.php';
+            exit;
+        }
+        if ($currentTab === 'catatan') {
+            require __DIR__ . '/../includes/partials/tambahan/tab_catatan.php';
+            echo '</div></main>';
+            require_once __DIR__ . '/../includes/footer.php';
+            exit;
+        }
+        if ($currentTab === 'poin') {
+            require __DIR__ . '/../includes/partials/tambahan/tab_poin.php';
+            echo '</div></main>';
+            require_once __DIR__ . '/../includes/footer.php';
+            exit;
+        }
+        if ($currentTab === 'kehadiran') {
+            require __DIR__ . '/../includes/partials/tambahan/tab_kehadiran.php';
+            echo '</div></main>';
+            require_once __DIR__ . '/../includes/footer.php';
+            exit;
+        }
+        if ($currentTab === 'kehadiran_bulanan') {
+            require __DIR__ . '/../includes/partials/tambahan/tab_kehadiran_bulanan.php';
+            echo '</div></main>';
+            require_once __DIR__ . '/../includes/footer.php';
+            exit;
+        }
+        if ($currentTab === 'kenaikan') {
+            require __DIR__ . '/../includes/partials/tambahan/tab_kenaikan.php';
+            echo '</div></main>';
+            require_once __DIR__ . '/../includes/footer.php';
+            exit;
+        }
+        ?>
 
         <?php if ($tab === 'guru'): ?>
             <?php require __DIR__ . '/../includes/partials/tab_data_guru.php'; ?>

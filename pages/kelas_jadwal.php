@@ -7,6 +7,9 @@ $currentPage = 'jadwal';
 $user        = currentUser();
 $isAdmin     = isAdmin();
 
+// Auto-pastikan tabel fitur tambahan tersedia (jurnal_mengajar)
+ensureFiturTambahanTables($pdo);
+
 $daftarGuru  = $pdo->query("SELECT id, nama_lengkap FROM users WHERE role='guru' ORDER BY nama_lengkap")->fetchAll();
 $daftarMapel = $pdo->query('SELECT * FROM mata_pelajaran ORDER BY nama_mapel')->fetchAll();
 $daftarKelas = $pdo->query('SELECT * FROM kelas ORDER BY tingkat, nama_kelas')->fetchAll();
@@ -365,13 +368,13 @@ require_once __DIR__ . '/../includes/topbar.php';
         renderFlash(); 
         
         $currentTab = $_GET['tab'] ?? '';
-        $unimplementedTabs = [
-            'jurnal' => 'Jurnal Kelas'
-        ];
+        $unimplementedTabs = []; // semua tab sudah diisi
         
-        if (array_key_exists($currentTab, $unimplementedTabs)) {
-            renderComingSoon($unimplementedTabs[$currentTab]);
-            echo '</div></main></body></html>';
+        // Routing khusus tab Jurnal
+        if ($currentTab === 'jurnal') {
+            require __DIR__ . '/../includes/partials/tambahan/tab_jurnal.php';
+            echo '</div></main>';
+            require_once __DIR__ . '/../includes/footer.php';
             exit;
         }
         ?>

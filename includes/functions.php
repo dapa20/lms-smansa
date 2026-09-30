@@ -345,3 +345,147 @@ function renderComingSoon(string $namaFitur): void
     </div>
     ';
 }
+
+/**
+ * Helper untuk memastikan tabel fitur-tambahan sudah ada di database.
+ * Dipanggil di awal partial yang memakai tabel tersebut supaya admin tidak
+ * perlu menjalankan migration script secara terpisah.
+ */
+function ensureFiturTambahanTables(PDO $pdo): void {
+    static $sudahDijalankan = false;
+    if ($sudahDijalankan) return;
+    $sudahDijalankan = true;
+
+    $queries = [
+        "CREATE TABLE IF NOT EXISTS struktur_kelas (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            kelas_id INT UNSIGNED NOT NULL,
+            siswa_id INT UNSIGNED NOT NULL,
+            jabatan VARCHAR(50) NOT NULL,
+            urutan TINYINT UNSIGNED NOT NULL DEFAULT 1,
+            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            UNIQUE KEY uniq_siswa_jabatan (kelas_id, siswa_id)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
+        "CREATE TABLE IF NOT EXISTS catatan_wali (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            siswa_id INT UNSIGNED NOT NULL,
+            kelas_id INT UNSIGNED NOT NULL,
+            catatan TEXT NOT NULL,
+            jenis ENUM('positif','perhatian','pelanggaran','lainnya') NOT NULL DEFAULT 'perhatian',
+            dibuat_oleh INT UNSIGNED NOT NULL,
+            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
+        "CREATE TABLE IF NOT EXISTS poin_siswa (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            siswa_id INT UNSIGNED NOT NULL,
+            kelas_id INT UNSIGNED NOT NULL,
+            jenis ENUM('pelanggaran','prestasi') NOT NULL DEFAULT 'pelanggaran',
+            poin INT NOT NULL DEFAULT 0,
+            kategori VARCHAR(100) NOT NULL,
+            keterangan VARCHAR(255) DEFAULT NULL,
+            tanggal DATE NOT NULL,
+            dibuat_oleh INT UNSIGNED NOT NULL,
+            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
+        "CREATE TABLE IF NOT EXISTS jurnal_mengajar (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            jadwal_id INT UNSIGNED NOT NULL,
+            guru_id INT UNSIGNED NOT NULL,
+            kelas_id INT UNSIGNED NOT NULL,
+            mapel_id INT UNSIGNED NOT NULL,
+            tanggal DATE NOT NULL,
+            jam_mulai TIME NOT NULL,
+            jam_selesai TIME NOT NULL,
+            materi VARCHAR(255) NOT NULL,
+            kegiatan TEXT DEFAULT NULL,
+            catatan TEXT DEFAULT NULL,
+            siswa_hadir INT UNSIGNED DEFAULT 0,
+            siswa_izin INT UNSIGNED DEFAULT 0,
+            siswa_sakit INT UNSIGNED DEFAULT 0,
+            siswa_alpa INT UNSIGNED DEFAULT 0,
+            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            INDEX idx_jurnal_tanggal (tanggal),
+            INDEX idx_jurnal_guru_tgl (guru_id, tanggal)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
+        "CREATE TABLE IF NOT EXISTS kkm_mapel (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            mapel_id INT UNSIGNED NOT NULL,
+            kelas_id INT UNSIGNED NOT NULL,
+            kkm DECIMAL(5,2) NOT NULL DEFAULT 75,
+            bobot_tugas DECIMAL(5,2) NOT NULL DEFAULT 30,
+            bobot_uts DECIMAL(5,2) NOT NULL DEFAULT 30,
+            bobot_uas DECIMAL(5,2) NOT NULL DEFAULT 40,
+            deskripsi VARCHAR(255) DEFAULT NULL,
+            updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            UNIQUE KEY uniq_kkm (mapel_id, kelas_id)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
+        "CREATE TABLE IF NOT EXISTS indikator_nilai (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            mapel_id INT UNSIGNED NOT NULL,
+            kelas_tingkat ENUM('X','XI','XII') NOT NULL,
+            semester ENUM('Ganjil','Genap') NOT NULL DEFAULT 'Ganjil',
+            kode_indikator VARCHAR(20) NOT NULL,
+            deskripsi VARCHAR(500) NOT NULL,
+            urutan TINYINT UNSIGNED NOT NULL DEFAULT 1,
+            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
+        "CREATE TABLE IF NOT EXISTS nilai_sikap (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            siswa_id INT UNSIGNED NOT NULL,
+            kelas_id INT UNSIGNED NOT NULL,
+            jenis ENUM('spiritual','sosial') NOT NULL,
+            semester ENUM('Ganjil','Genap') NOT NULL DEFAULT 'Ganjil',
+            tahun_ajaran VARCHAR(20) NOT NULL DEFAULT '2024/2025',
+            predikat ENUM('Sangat Baik','Baik','Cukup','Perlu Bimbingan') NOT NULL DEFAULT 'Baik',
+            deskripsi TEXT DEFAULT NULL,
+            dibuat_oleh INT UNSIGNED NOT NULL,
+            updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            UNIQUE KEY uniq_sikap (siswa_id, kelas_id, jenis, semester, tahun_ajaran)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
+        "CREATE TABLE IF NOT EXISTS prestasi_siswa (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            siswa_id INT UNSIGNED NOT NULL,
+            kelas_id INT UNSIGNED NOT NULL,
+            jenis_prestasi ENUM('akademik','non-akademik','olahraga','seni','lainnya') NOT NULL DEFAULT 'akademik',
+            nama_prestasi VARCHAR(200) NOT NULL,
+            tingkat ENUM('Sekolah','Kecamatan','Kabupaten','Provinsi','Nasional','Internasional') NOT NULL DEFAULT 'Sekolah',
+            peringkat VARCHAR(50) DEFAULT NULL,
+            tahun YEAR NOT NULL,
+            keterangan VARCHAR(255) DEFAULT NULL,
+            dibuat_oleh INT UNSIGNED NOT NULL,
+            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
+        "CREATE TABLE IF NOT EXISTS kenaikan_kelas (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            siswa_id INT UNSIGNED NOT NULL,
+            kelas_asal_id INT UNSIGNED NOT NULL,
+            kelas_tujuan_id INT UNSIGNED DEFAULT NULL,
+            tahun_ajaran VARCHAR(20) NOT NULL,
+            status ENUM('naik','tinggal','lulus','pindah') NOT NULL DEFAULT 'naik',
+            catatan VARCHAR(255) DEFAULT NULL,
+            dibuat_oleh INT UNSIGNED NOT NULL,
+            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
+        "CREATE TABLE IF NOT EXISTS arsip_rapor (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            siswa_id INT UNSIGNED NOT NULL,
+            kelas_id INT UNSIGNED NOT NULL,
+            semester ENUM('Ganjil','Genap') NOT NULL DEFAULT 'Ganjil',
+            tahun_ajaran VARCHAR(20) NOT NULL,
+            file_arsip VARCHAR(255) DEFAULT NULL,
+            rata_rata DECIMAL(5,2) DEFAULT NULL,
+            peringkat INT UNSIGNED DEFAULT NULL,
+            status ENUM('cetak','diarsipkan') NOT NULL DEFAULT 'cetak',
+            catatan VARCHAR(255) DEFAULT NULL,
+            dibuat_oleh INT UNSIGNED NOT NULL,
+            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE KEY uniq_rapor (siswa_id, kelas_id, semester, tahun_ajaran)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
+    ];
+
+    foreach ($queries as $sql) {
+        try { $pdo->exec($sql); } catch (Throwable $e) { /* diamkan */ }
+    }
+}
