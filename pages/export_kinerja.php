@@ -84,6 +84,18 @@ for ($d = 1; $d <= $jumlahHari; $d++) {
         $mapelUnik = [];
         $totalSesi = count($jadwalPerHari[$hariId]);
 
+        // Hitung JP aktual dari jam_mulai - jam_selesai, fallback 2 JP/sesi
+        $jpHari = 0;
+        foreach ($jadwalPerHari[$hariId] as $s) {
+            if (!empty($s['jam_mulai']) && !empty($s['jam_selesai'])) {
+                $menit = max(0, (strtotime($s['jam_selesai']) - strtotime($s['jam_mulai'])) / 60);
+                $jp = round($menit / 45, 2);
+                $jpHari += ($jp > 0 ? $jp : 2);
+            } else {
+                $jpHari += 2;
+            }
+        }
+
         foreach ($jadwalPerHari[$hariId] as $itemJadwal) {
             $kelasUnik[] = $itemJadwal['nama_kelas'];
             $mapelUnik[] = $itemJadwal['nama_mapel'];
@@ -97,7 +109,7 @@ for ($d = 1; $d <= $jumlahHari; $d++) {
             'tanggal' => date('d/m/Y', strtotime($tanggalStr)),
             'hari' => $hariId,
             'kegiatan' => $teksKegiatan,
-            'volume' => $totalSesi . ' Kegiatan (' . ($totalSesi * 2) . ' JP)',
+            'volume' => $totalSesi . ' Sesi (' . $jpHari . ' JP)',
             'keterangan' => 'Jurnal KBM & Presensi Siswa'
         ];
     }

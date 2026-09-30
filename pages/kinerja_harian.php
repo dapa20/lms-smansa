@@ -119,8 +119,20 @@ for ($d = $jumlahHariDalamBulan; $d >= 1; $d--) {
     if (!empty($jadwalPerHari[$hariId])) {
         $adaKegiatanHariIni = true;
         $sesiCount = count($jadwalPerHari[$hariId]);
-        $totalKegiatan += $sesiCount;
-        $totalJP += ($sesiCount * 2);
+        // Hitung JP aktual dari jam_mulai - jam_selesai per sesi, default 2 JP per sesi jika data kosong
+        $jpHariIni = 0;
+        foreach ($jadwalPerHari[$hariId] as $s) {
+            if (!empty($s['jam_mulai']) && !empty($s['jam_selesai'])) {
+                $mulai = strtotime($s['jam_mulai']);
+                $selesai = strtotime($s['jam_selesai']);
+                $menit = max(0, ($selesai - $mulai) / 60);
+                $jp = round($menit / 45, 2); // 1 JP = 45 menit
+                $jpHariIni += ($jp > 0 ? $jp : 2);
+            } else {
+                $jpHariIni += 2;
+            }
+        }
+        $totalJP += $jpHariIni;
 
         $kelasUnik = [];
         $mapelUnik = [];
@@ -131,18 +143,23 @@ for ($d = $jumlahHariDalamBulan; $d >= 1; $d--) {
         $kelasUnik = array_unique($kelasUnik);
         $mapelUnik = array_unique($mapelUnik);
 
+        // Tulis 1 row kegiatan harian (bukan per sesi), agar tabel tidak meledak untuk guru dengan banyak jadwal
+        $totalKegiatan++; // 1 row per hari, bukan per sesi
         $uraian = "Mengajar di Kelas " . implode(' & ', $kelasUnik) . " (" . implode(', ', $mapelUnik) . ")";
         
         $daftarKegiatan[] = [
             'id'         => null,
             'is_manual'  => false,
+            'is_kbm'     => true,
             'tanggal'    => $tglStr,
             'hari'       => $hariId,
             'tgl_format' => date('d/m/Y', strtotime($tglStr)),
             'kegiatan'   => $uraian,
-            'volume'     => $sesiCount . " Kegiatan",
-            'detail_vol' => ($sesiCount * 2) . " JP",
+            'volume'     => $sesiCount . " Sesi (" . $jpHariIni . " JP)",
+            'detail_vol' => '',
             'keterangan' => 'KBM Reguler & Absensi Kelas',
+            'kelas_list' => $kelasUnik,
+            'mapel_list' => $mapelUnik,
         ];
     }
 
